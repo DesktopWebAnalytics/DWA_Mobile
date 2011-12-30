@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+	DWA_Mobile
+
+	Link http://www.desktop-web-analytics.com
+	Link https://github.com/DesktopWebAnalytics
+	Licence http://www.gnu.org/licenses/gpl-3.0-standalone.html GPL v3 or later
+
+	$Id: Del.mxml 237 2011-12-15 15:25:06Z benoit $
+-->
+<s:View xmlns:fx="http://ns.adobe.com/mxml/2009" 
+		xmlns:s="library://ns.adobe.com/flex/spark" 
+		title="{resourceManager.getString('piwik', 'General_Delete')}" initialize="view1_initializeHandler(event)" viewActivate="initView()">
+	<fx:Script>
+		<![CDATA[
+			import com.dwa.common.database.DataBase;
+			import com.dwa.common.profile.Profile;
+			
+			import mx.core.FlexGlobals;
+			import mx.events.FlexEvent;
+			
+			protected function initView():void
+			{
+				// TODO Auto-generated method stub
+				
+			}
+			
+			private function deleteWebsite():void{
+				loading();
+				
+				var db:DataBase = new DataBase();
+				
+				db.addEventListener(Event.COMPLETE, handleComplete);
+				db.addEventListener(ErrorEvent.ERROR, handleError);
+				db.removeProfile(data.dbId);
+			}
+			
+			private function handleComplete(event:Event):void{
+				FlexGlobals.topLevelApplication.getWebsites();
+			}
+			private function handleError(event:ErrorEvent):void{
+				endLoading();
+				error.visible=true;
+				error.text = event.text;
+			}
+			private function loading():void{
+				currentState = "loading";
+				error.visible = false;
+			}
+			private function endLoading():void{
+				currentState = "normal";
+			}
+			
+			protected function view1_initializeHandler(event:FlexEvent):void
+			{
+				// TODO Auto-generated method stub
+				if(!FlexGlobals.topLevelApplication.isTablet){
+					actionBarVisible = false;
+				}
+			}
+			
+		]]>
+	</fx:Script>
+	<fx:Declarations>
+		<!-- Placer ici les éléments non visuels (services et objets de valeur, par exemple). -->
+	</fx:Declarations>
+	<s:navigationContent>
+		<s:Button styleName="buttonBack" visible="{FlexGlobals.topLevelApplication.showBackButton}" click="navigator.popView()">
+			<s:icon>
+				<s:MultiDPIBitmapSource source160dpi="@Embed('assets/icons/low/ic_menu_back.png')"
+										source240dpi="@Embed('assets/icons/med/ic_menu_back.png')"
+										source320dpi="@Embed('assets/icons/high/ic_menu_back.png')" />
+			</s:icon>
+		</s:Button>
+	</s:navigationContent>
+	
+	<s:layout>
+		<s:VerticalLayout paddingTop="10" />
+	</s:layout>
+	
+	<s:states>
+		<s:State name="normal" />
+		<s:State name="loading" />
+	</s:states>
+	
+	<s:Scroller width="100%" height="100%">
+		<s:VGroup width="100%" height="100%" horizontalAlign="center" verticalAlign="middle">
+			
+			
+			<s:Label width="80%" textAlign="center" text="{resourceManager.getString('piwik', 'SitesManager_DeleteConfirm_js').replace('%s', data.websiteName)}" />
+			
+			<s:HGroup gap="20">
+				<s:BusyIndicator width="60" height="60" excludeFrom="normal" />
+				<s:Button excludeFrom="loading" label="{resourceManager.getString('piwik', 'General_Yes')}" width="120" height="80" click="deleteWebsite()" />
+				<s:Button excludeFrom="loading" label="{resourceManager.getString('piwik', 'General_No')}" width="120" height="80" click="navigator.popView()" />
+			</s:HGroup>
+			<s:Label id="error" color="red" visible="false" />
+		</s:VGroup>
+	</s:Scroller>
+</s:View>

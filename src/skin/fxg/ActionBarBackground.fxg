@@ -1,0 +1,29 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!--
+	DWA_Mobile
+
+	Link http://www.desktop-web-analytics.com
+	Link https://github.com/DesktopWebAnalytics
+	Licence http://www.gnu.org/licenses/gpl-3.0-standalone.html GPL v3 or later
+-->
+<fxg:Graphic xmlns:fxg="http://ns.adobe.com/fxg/2008" version="2">
+	<fxg:Rect radiusX="0" radiusY="0" width="1024" height="60">
+	
+		<fxg:fill>
+			<fxg:LinearGradient rotation="90">
+				<fxg:GradientEntry color="#F9F9F9" />
+				<fxg:GradientEntry color="#DADADC" />
+			</fxg:LinearGradient>
+		</fxg:fill>
+
+
+		<fxg:filters>
+			<fxg:DropShadowFilter alpha=".43"
+								blurX="7"
+								blurY="7"
+								color="#5B7680"
+								quality="3"
+								distance="0"/>
+		</fxg:filters>
+	</fxg:Rect>
+</fxg:Graphic>

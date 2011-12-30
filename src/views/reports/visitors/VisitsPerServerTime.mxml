@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+	DWA_Mobile
+
+	Link http://www.desktop-web-analytics.com
+	Link https://github.com/DesktopWebAnalytics
+	Licence http://www.gnu.org/licenses/gpl-3.0-standalone.html GPL v3 or later
+
+	$Id: VisitsPerServerTime.mxml 237 2011-12-15 15:25:06Z benoit $
+-->
+<s:View xmlns:fx="http://ns.adobe.com/mxml/2009" 
+				 xmlns:s="library://ns.adobe.com/flex/spark"
+				 viewActivate="initView()" currentState="loading" actionBarVisible="false" xmlns:views="views.*" xmlns:mx="library://ns.adobe.com/flex/mx" xmlns:states="views.states.*">
+	<fx:Script>
+		<![CDATA[
+			import com.dwa.common.profile.Profile;
+			import com.dwa.common.reports.Reports;
+			
+			import mx.collections.ArrayList;
+			import mx.collections.XMLListCollection;
+			import mx.core.FlexGlobals;
+			
+			private var report:Reports;
+			
+			private var result:XMLListCollection;
+			
+			private function initView():void{
+				titleView.text = resourceManager.getString('piwik', 'VisitTime_ServerTime') + " - " + resourceManager.getString('piwik', 'General_DateRange') + ' ' + dateTimeFormmatter.format(FlexGlobals.topLevelApplication.selectedStartDate) + " - " + dateTimeFormmatter.format(FlexGlobals.topLevelApplication.selectedEndDate);
+				
+				report = new Reports();
+				report.addEventListener(Event.COMPLETE, resultApi);
+				report.addEventListener(ErrorEvent.ERROR, error);
+				report.getVisitsPerServerTime(data as Profile, FlexGlobals.topLevelApplication.selectedPeriodDate);
+			}
+			private function resultApi(event:Event):void{
+				trace("result server time");
+				result = report.resultCollectionBasic;
+				clear();
+				
+				currentState = "chart";
+				
+				serverChart.dataProvider = result;
+			}
+			private function error(event:ErrorEvent):void{
+				trace("error: " + event.text);
+				clear();
+				currentState = "error";
+				errorState.message(event.text);
+			}
+			private function clear():void{
+				report.removeEventListener(Event.COMPLETE, resultApi);
+				report.removeEventListener(ErrorEvent.ERROR, error);
+				report = null;
+			}
+			
+		]]>
+	</fx:Script>
+	<fx:Declarations>
+		<!-- Placer ici les éléments non visuels (services et objets de valeur, par exemple). -->
+		
+		<mx:SeriesInterpolate id="interpolateIn" duration="1000" />
+		
+		<s:DateTimeFormatter id="dateTimeFormmatter" timeStyle="none" locale="{resourceManager.getString('piwik', 'General_Locale')}" />
+	</fx:Declarations>
+	
+	<s:states>
+		<s:State name="loading" />
+		<s:State name="chart" />
+		<s:State name="tab" />
+		<s:State name="error" />
+	</s:states>
+	
+	<s:layout>
+		<s:VerticalLayout paddingTop="10" paddingLeft="5" paddingRight="5" paddingBottom="5" />
+	</s:layout>
+	
+	<s:Label id="titleView" width="100%" fontSize="20" textAlign="center" />
+	
+	<states:Loader width="100%" height="100%" includeIn="loading" />
+	
+	<states:Error id="errorState" width="100%" height="100%" includeIn="error" />
+	
+	<s:Group width="100%" height="100%" includeIn="chart">
+		<mx:ColumnChart id="serverChart" showDataTips="true" type="overlaid" top="0" left="0" right="0" bottom="20">	
+			<mx:horizontalAxis>
+				<mx:CategoryAxis id="cac" categoryField="label" />
+			</mx:horizontalAxis>
+			<mx:horizontalAxisRenderers>
+				<mx:AxisRenderer axis="{cac}" />
+			</mx:horizontalAxisRenderers>
+			<mx:series>
+				<mx:ColumnSeries id="seriesVisits" yField="nb_visits" styleName="columnSerie1" displayName="{resourceManager.getString('piwik', 'General_ColumnNbVisits')}" showDataEffect="{interpolateIn}" />
+				<mx:ColumnSeries id="seriesBounce" yField="bounce_count" styleName="columnSerie2" displayName="{resourceManager.getString('piwik', 'General_ColumnBounceRate')}" showDataEffect="{interpolateIn}" />
+			</mx:series>
+		</mx:ColumnChart>
+		<mx:Legend horizontalCenter="0" bottom="0" dataProvider="{serverChart}" direction="horizontal" />
+	</s:Group>
+		
+	<s:VGroup width="100%" height="100%" includeIn="tab">
+		<s:SkinnableContainer id="legend" width="100%" height="40" fontSize="20" >
+			<s:Label text="{resourceManager.getString('piwik', 'VisitTime_ColumnServerTime')}" left="2" top="15" />
+			<s:Label text="{resourceManager.getString('piwik', 'General_ColumnNbUniqVisitors')}" right="{legend.width/4*2+2}" top="15" />
+			<s:Label text="{resourceManager.getString('piwik', 'General_ColumnNbVisits')}" right="{legend.width/4+2}" top="15" />
+			<s:Label text="{resourceManager.getString('piwik', 'General_ColumnBounceRate')}" right="2" top="15" />
+		</s:SkinnableContainer>
+		
+		<s:List id="list" width="100%" height="300">
+			<s:itemRenderer>
+				<fx:Component>
+					<s:ItemRenderer width="100%" dataChange="dataChange()">
+						<fx:Script>
+							<![CDATA[
+								
+								private function dataChange():void{
+									if(data==null) return;
+									
+									heure.text = data.Heure;
+									uniq_visits.text = data.Uniq_visits;
+									visits.text = data.Visits;
+									bounce.text = data.Bounce;
+								}
+							]]>
+						</fx:Script>
+						<s:SkinnableContainer id="info" width="100%" height="40" >
+							<s:Label id="heure" left="2" top="10" />
+							<s:Label id="uniq_visits" right="{info.width/4*2+2}" top="10" />
+							<s:Label id="visits" right="{info.width/4+2}" top="10" />
+							<s:Label id="bounce" right="2" top="10" />
+						</s:SkinnableContainer>
+					</s:ItemRenderer>
+				</fx:Component>
+			</s:itemRenderer>
+		</s:List>
+	</s:VGroup>
+</s:View>

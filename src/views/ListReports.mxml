@@ -1,0 +1,264 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+	DWA_Mobile
+
+	Link http://www.desktop-web-analytics.com
+	Link https://github.com/DesktopWebAnalytics
+	Licence http://www.gnu.org/licenses/gpl-3.0-standalone.html GPL v3 or later
+
+	$Id: ListReports.mxml 237 2011-12-15 15:25:06Z benoit $
+-->
+<s:View xmlns:fx="http://ns.adobe.com/mxml/2009" 
+				 xmlns:s="library://ns.adobe.com/flex/spark"
+				 actionBarVisible="false"
+				 viewActivate="initView()" destructionPolicy="never" >
+	<fx:Script>
+		<![CDATA[
+			import mx.core.FlexGlobals;
+			
+			import spark.components.SplitViewNavigator;
+			import spark.components.ViewNavigator;
+			
+			import views.reports.actions.Downloads;
+			import views.reports.actions.Outlinks;
+			import views.reports.actions.PageTitles;
+			import views.reports.actions.Pages;
+			import views.reports.referers.Campaigns;
+			import views.reports.referers.Keywords;
+			import views.reports.referers.SearchEngines;
+			import views.reports.referers.Websites;
+			import views.reports.visitors.BrowserFamilies;
+			import views.reports.visitors.Browsers;
+			import views.reports.visitors.Configurations;
+			import views.reports.visitors.Locations;
+			import views.reports.visitors.OperatingSystems;
+			import views.reports.visitors.Plugins;
+			import views.reports.visitors.Providers;
+			import views.reports.visitors.Resolutions;
+			import views.reports.visitors.Visits;
+			import views.reports.visitors.VisitsPerLocalTime;
+			import views.reports.visitors.VisitsPerServerTime;
+			import views.reports.visitors.WideScreen;
+			
+			private const DAY:int = 86400000;
+			
+			private function initView():void{
+				trace("Liste reports");
+				var start:Date = new Date();
+				var end:Date = new Date();
+				
+				if(!data.websiteDay) end.time = end.time - DAY;
+				start.time = end.time - (DAY * (data.websitePeriod-1));
+				
+				if(FlexGlobals.topLevelApplication.isTablet) {
+					reportsList.selectedIndex = 1;
+				}
+			}
+			private function selectReport():void{
+				var report:String = reportsList.selectedItem.id;
+				var goToView:Class;
+				
+				switch(report){
+					case 'visits':
+						goToView = Visits;
+						break;
+					
+					case 'visitsLocalTime':
+						goToView = VisitsPerLocalTime;
+						break;
+					
+					case 'visitsServerTime':
+						goToView = VisitsPerServerTime;
+						break;
+					
+					case 'configuration':
+						goToView = Configurations;
+						break;
+					
+					case 'browserFamilies':
+						goToView = BrowserFamilies;
+						break;
+					
+					case 'browsers':
+						goToView = Browsers;
+						break;
+					
+					case 'os':
+						goToView = OperatingSystems;
+						break;
+					
+					case 'resolutions':
+						goToView = Resolutions;
+						break;
+					
+					case 'wideScreen':
+						goToView = WideScreen;
+						break;
+					
+					case 'plugins':
+						goToView = Plugins;
+						break;
+					
+					case 'locations':
+						goToView = Locations;
+						break;
+					
+					case 'providers':
+						goToView = Providers;
+						break;
+					
+					case 'pageUrls':
+						goToView = Pages;
+						break;
+					
+					case 'pageTitles':
+						goToView = PageTitles;
+						break;
+					
+					case 'outlinks':
+						goToView = Outlinks;
+						break;
+					
+					case 'downloads':
+						goToView = Downloads;
+						break;
+					
+					case 'searchEngines':
+						goToView = SearchEngines;
+						break;
+					
+					case 'keywords':
+						goToView = Keywords;
+						break;
+					
+					case 'websites':
+						goToView = Websites;
+						break;
+					
+					case 'campaigns':
+						goToView = Campaigns;
+						break;
+				}
+				
+				FlexGlobals.topLevelApplication.currentView = goToView;
+				
+				if(!FlexGlobals.topLevelApplication.isTablet){
+					navigator.pushView(goToView, data);
+					reportsList.selectedIndex = -1;
+				}else{
+					var splitNavigator:SplitViewNavigator = navigator.parentNavigator as SplitViewNavigator;
+					
+					(splitNavigator.getViewNavigatorAt(1) as ViewNavigator).pushView(goToView, data);
+				}
+			}
+		]]>
+	</fx:Script>
+	<fx:Declarations>
+		<!-- Placer ici les éléments non visuels (services et objets de valeur, par exemple). -->
+		
+		<s:DateTimeFormatter id="dateTimeFormatter" locale="{resourceManager.getString('piwik', 'General_Locale')}" timeStyle="none" />
+		
+		<s:ArrayList id="reports">
+			<fx:Object>
+				<fx:id>header</fx:id>
+				<fx:label>{resourceManager.getString('piwik', 'General_Visitors')}</fx:label>
+			</fx:Object>
+			<fx:Object>
+				<fx:id>visits</fx:id>
+				<fx:label>{resourceManager.getString('piwik', 'VisitFrequency_Evolution')}</fx:label>
+			</fx:Object>
+			<fx:Object>
+				<fx:id>visitsLocalTime</fx:id>
+				<fx:label>{resourceManager.getString('piwik', 'VisitTime_LocalTime')}</fx:label>
+			</fx:Object>
+			<fx:Object>
+				<fx:id>visitsServerTime</fx:id>
+				<fx:label>{resourceManager.getString('piwik', 'VisitTime_ServerTime')}</fx:label>
+			</fx:Object>
+			<fx:Object>
+				<fx:id>configuration</fx:id>
+				<fx:label>{resourceManager.getString('piwik', 'UserSettings_Configurations')}</fx:label>
+			</fx:Object>
+			<fx:Object>
+				<fx:id>browserFamilies</fx:id>
+				<fx:label>{resourceManager.getString('piwik', 'UserSettings_BrowserFamilies')}</fx:label>
+			</fx:Object>
+			<fx:Object>
+				<fx:id>browsers</fx:id>
+				<fx:label>{resourceManager.getString('piwik', 'UserSettings_Browsers')}</fx:label>
+			</fx:Object>
+			<fx:Object>
+				<fx:id>os</fx:id>
+				<fx:label>{resourceManager.getString('piwik', 'UserSettings_OperatingSystems')}</fx:label>
+			</fx:Object>
+			<fx:Object>
+				<fx:id>resolutions</fx:id>
+				<fx:label>{resourceManager.getString('piwik', 'UserSettings_Resolutions')}</fx:label>
+			</fx:Object>
+			<fx:Object>
+				<fx:id>wideScreen</fx:id>
+				<fx:label>{resourceManager.getString('piwik', 'UserSettings_WideScreen')}</fx:label>
+			</fx:Object>
+			<fx:Object>
+				<fx:id>plugins</fx:id>
+				<fx:label>{resourceManager.getString('piwik', 'UserSettings_Plugins')}</fx:label>
+			</fx:Object>
+			<fx:Object>
+				<fx:id>locations</fx:id>
+				<fx:label>{resourceManager.getString('piwik', 'UserCountry_WidgetCountries')}</fx:label>
+			</fx:Object>
+			<fx:Object>
+				<fx:id>providers</fx:id>
+				<fx:label>{resourceManager.getString('piwik', 'Provider_WidgetProviders')}</fx:label>
+			</fx:Object>
+			<fx:Object>
+				<fx:id>header</fx:id>
+				<fx:label>{resourceManager.getString('piwik', 'Actions_Actions')}</fx:label>
+			</fx:Object>
+			<fx:Object>
+				<fx:id>pageUrls</fx:id>
+				<fx:label>{resourceManager.getString('piwik', 'Actions_SubmenuPages')}</fx:label>
+			</fx:Object>
+			<fx:Object>
+				<fx:id>pageTitles</fx:id>
+				<fx:label>{resourceManager.getString('piwik', 'Actions_SubmenuPageTitles')}</fx:label>
+			</fx:Object>
+			<fx:Object>
+				<fx:id>outlinks</fx:id>
+				<fx:label>{resourceManager.getString('piwik', 'Actions_SubmenuOutlinks')}</fx:label>
+			</fx:Object>
+			<fx:Object>
+				<fx:id>downloads</fx:id>
+				<fx:label>{resourceManager.getString('piwik', 'Actions_SubmenuDownloads')}</fx:label>
+			</fx:Object>
+			<fx:Object>
+				<fx:id>header</fx:id>
+				<fx:label>{resourceManager.getString('piwik', 'Referers_Referers')}</fx:label>
+			</fx:Object>
+			<fx:Object>
+				<fx:id>searchEngines</fx:id>
+				<fx:label>{resourceManager.getString('piwik', 'Referers_SearchEngines')}</fx:label>
+			</fx:Object>
+			<fx:Object>
+				<fx:id>keywords</fx:id>
+				<fx:label>{resourceManager.getString('piwik', 'Referers_Keywords')}</fx:label>
+			</fx:Object>
+			<fx:Object>
+				<fx:id>websites</fx:id>
+				<fx:label>{resourceManager.getString('piwik', 'Referers_SubmenuWebsites')}</fx:label>
+			</fx:Object>
+			<fx:Object>
+				<fx:id>campaigns</fx:id>
+				<fx:label>{resourceManager.getString('piwik', 'Referers_SubmenuCampaigns')}</fx:label>
+			</fx:Object>
+		</s:ArrayList>
+	</fx:Declarations>
+	
+	<s:layout>
+		<s:VerticalLayout paddingTop="1" />
+	</s:layout>
+	
+	<s:List id="reportsList" width="100%" height="100%" dataProvider="{reports}" itemRenderer="views.renderers.ReportsItemRenderer" change="selectReport()">
+		
+	</s:List>
+</s:View>

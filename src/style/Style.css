@@ -1,0 +1,182 @@
+/* CSS file */
+/*
+	DWA_Mobile
+
+	Link http://www.desktop-web-analytics.com
+	Link https://github.com/DesktopWebAnalytics
+	Licence http://www.gnu.org/licenses/gpl-3.0-standalone.html GPL v3 or later
+*/
+
+@namespace s "library://ns.adobe.com/flex/spark";
+@namespace components "spark.components.*";
+@namespace mobile "spark.skins.mobile.*";
+@namespace mx "library://ns.adobe.com/flex/mx";
+
+s|Application
+{
+	background-color:#f9f9f9;
+	color:black;
+	fontSize:18;
+}
+s|ActionBar{
+	chromeColor: #f9f9f9;
+	skinClass: ClassReference("skin.ActionBarSkin");
+}
+s|ActionBar #titleDisplay{
+	fontSize: 24;
+	color: #898989;
+	textAlign:center;
+}
+s|ActionBar s|Group#navigationGroup #dashboardBackButton{
+	fontSize: 20;
+}
+s|ActionBar s|Group#navigationGroup #reportsButton{
+	fontSize: 20;
+}
+#dateRangeViewNav s|ActionBar{
+	textShadowAlpha: 0;
+}
+#dateRangeViewNav s|ActionBar #titleDisplay{
+	fontSize: 24;
+	color:#898989;
+}
+@media (os-platform: "IOS"){
+	s|ActionBar{
+		defaultButtonAppearance: beveled;
+	}
+	s|ActionBar.beveled s|Group#navigationGroup #reportsButton{
+		skinClass: ClassReference("spark.skins.mobile.BeveledActionButtonSkin");
+	}
+	s|ActionBar.beveled s|Group#navigationGroup .buttonInfo{
+		skinClass: ClassReference("spark.skins.mobile.BeveledActionButtonSkin");
+	}
+}
+@media (os-platform:"Android"){
+	
+}
+s|ViewNavigator
+{
+	/* background-color:#f9f9f9;
+	color:black;
+	fontSize:18; */
+}
+
+
+s|List
+{
+	contentBackgroundColor:#F9F9F9;
+	color:#898989;
+	borderColor:#DADADC;
+	borderAlpha:0.5;
+	fontSize:20;
+	alternatingItemColors:#FFFFFF,#FEFEFE;
+}
+s|LabelItemRenderer
+{
+	downColor: #FEFEFE;
+	selectionColor: #FFFFFF;
+}
+s|IconItemRenderer
+{
+	messageStyleName: styleMessage;
+	font-size:20;
+}
+.styleMessage
+{
+	font-size:16;
+	color:#FF9E00;
+}
+
+/* s|TextInput
+{
+skin-class:ClassReference("skin.components.TextInputSkin");
+focusColor: #333333;
+focusThickness: 2;
+} */
+s|Button
+{
+	skin-class:ClassReference("skin.components.ButtonSkin");
+	color:white;
+	font-size:24;
+}
+.actionButton{
+	font-size: 24;
+	color:#898989;
+	textShadowAlpha:0;
+}
+s|Callout{
+	contentBackgroundAppearance: none;
+	skinClass:ClassReference("skin.components.CalloutSkin");
+	backgroundColor: #DADADC;
+}
+s|CalloutButton{
+	
+}
+
+@media (application-dpi:160){
+	
+}
+@media (application-dpi:240){
+	
+}
+@media (application-dpi:320){
+	
+}
+
+/* s|TextArea
+{
+content-background-color:#F9F9F9;
+} */
+s|CheckBox
+{
+	skin-class:ClassReference("skin.components.CheckBoxSkin");
+}
+s|RadioButton
+{
+	skin-class:ClassReference("skin.components.RadioButtonSkin");
+}
+#name
+{
+	font-size:22;
+}
+#url
+{
+	font-size:18;
+	color:#FF9E00;
+}
+
+.title{
+	fontSize: 20;
+}
+
+.legend{
+	fontSize:14;
+	
+}
+/* mx|LineChart{
+fontSize: 14;
+} */
+mx|AreaChart{
+	fontSize: 14;
+}
+mx|PieChart{
+	fontSize: 16;
+}
+mx|PieSeries{
+	fills: #00A317, #006ECC, #00BDC9, #9CFF00, #FFFF00, #FFA800, #FF6C00, #D042EF, #DADADC;
+}
+mx|ColumnChart{
+	fontSize: 14;
+}
+.columnSerie1{
+	fill: #FF7D01;
+}
+.columnSerie2{
+	fill: #00A317;
+}
+.columnSerie{
+	fill: #006ECC;
+}
+mx|Legend{
+	fontSize: 22;
+}

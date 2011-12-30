@@ -1,0 +1,265 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+	DWA_Mobile
+
+	Link http://www.desktop-web-analytics.com
+	Link https://github.com/DesktopWebAnalytics
+	Licence http://www.gnu.org/licenses/gpl-3.0-standalone.html GPL v3 or later
+
+	$Id: CreateProfile.mxml 237 2011-12-15 15:25:06Z benoit $
+-->
+<s:View xmlns:fx="http://ns.adobe.com/mxml/2009" 
+				 xmlns:s="library://ns.adobe.com/flex/spark"
+				 xmlns:mx="library://ns.adobe.com/flex/mx"
+				 title="{resourceManager.getString('piwik', 'SitesManager_AddSite')}" viewActivate="initView()" >
+	<fx:Script>
+		<![CDATA[
+			import com.dwa.common.profile.Profile;
+			import com.dwa.common.reports.Reports;
+			
+			import mx.collections.ArrayList;
+			import mx.collections.XMLListCollection;
+			import mx.core.FlexGlobals;
+			import mx.events.ValidationResultEvent;
+			import mx.validators.Validator;
+			
+			[Bindable]
+			private var siteSelected:Object;
+			
+			[Bindable]
+			private var rowCollection:XMLListCollection;
+			
+			private var checkInput:Reports;
+			
+			private var url:String;
+			private var auth:String;
+			
+			
+			private function initView():void{
+				
+			}
+			private function clearForm():void{
+				
+			}
+			
+			private function validInput():void{
+				errorCheck.text = "";
+				
+				var vResult:ValidationResultEvent;
+				var validator:Validator;
+				
+				var valid:Boolean = true;
+				
+				vResult = validUrl.validate();
+				if (vResult.type == ValidationResultEvent.INVALID) {
+					valid = false;
+				}
+				
+				if(!free.selected){
+					for each(validator in validators){
+						vResult = validator.validate();
+						if(vResult.type == ValidationResultEvent.INVALID) valid = false;
+					}
+				}
+				
+				if(!valid) return;
+				
+				checkUrl();
+				url = urlSite.text;
+				
+				loading();
+				if(free.selected){
+					auth = '';
+					checkRemote();
+				}else{
+					checkAndGetAPIKey();
+				}
+			}
+			private function checkUrl():void{
+				var test:String = urlSite.text;
+				// add the last slash of the url if it's missing
+				if(test.lastIndexOf('/') != (test.length-1)) urlSite.text = test + '/';
+			}
+			private function checkAndGetAPIKey():void{
+				var getKey:Reports = new Reports();
+				getKey.addEventListener(Event.COMPLETE, resultKey);
+				getKey.addEventListener(ErrorEvent.ERROR, errorKey);
+				getKey.checkAndGetAPIKey(urlSite.text, user.text, pass.text);
+			}
+			private function errorKey(event:ErrorEvent):void{
+				trace("error api key");
+				var error:String = resourceManager.getString('piwik', 'SitesManager_ExceptionInvalidUrl');
+				errorCheck.text = error.replace('%s', urlSite.text);
+				endLoading();
+			}
+			private function resultKey(event:Event):void{
+				var xml:XML = new XML(event.currentTarget.result);
+				
+				auth = xml.toString();
+				
+				checkRemote();
+			}
+			private function checkRemote():void {
+				var testProfile:Profile = new Profile();
+				
+				var testUrl:String = urlSite.text;
+				
+				testProfile.websitePiwikAccess = urlSite.text;
+				testProfile.websiteAuth = auth;
+				checkInput = new Reports();
+				checkInput.addEventListener(Event.COMPLETE, result, false, 0, true);
+				checkInput.addEventListener(ErrorEvent.ERROR, error, false, 0, true);
+				checkInput.getSitesWithViewAccess(testProfile);
+			}
+			private function error(evt:ErrorEvent):void{
+				trace("error");
+				var error:String = resourceManager.getString('piwik', 'SitesManager_ExceptionInvalidUrl');
+				errorCheck.text = error.replace('%s', urlSite.text);
+				endLoading();
+			}
+			private function dateDB(value:String):Number{
+				
+				var dateArray:Array = value.split(' ');
+				
+				var d:Array = dateArray[0].toString().split('-');
+				
+				var year:String = d[0];
+				var month:String = d[1];
+				var day:String = d[2];
+				
+				var date:Date = new Date();
+				date.setFullYear(year, Number(month)-1, day);
+				
+				return date.time;
+			}
+			private function result(evt:Event):void{
+				rowCollection = checkInput.resultCollectionBasic;
+				
+				if (rowCollection.length > 0) {
+					trace ("adresse ok");
+					/* selectSite.dataProvider = rowCollection;
+					selectSite.labelField = "name"; */
+					var ob:XML;
+					var pro:Profile;
+					var list:Array = new Array();
+					for each(ob in rowCollection){
+						pro = new Profile();
+						pro.websiteId = ob.idsite;
+						pro.websiteName = ob.name;
+						pro.websiteUrl = ob.main_url;
+						pro.websitePiwikAccess = url;
+						pro.websiteAuth = auth;
+						pro.websiteCreated = dateDB(ob.ts_created);
+						pro.websiteTimezone = ob.timezone;
+						pro.websiteCurrency = ob.currency;
+						
+						pro.selected = false;
+						
+						list.push(pro);
+					}
+					
+					//selectWebsite.dataProvider = new ArrayList(list);
+					goSelectWebsites(list);
+				}
+				else {
+					trace ("Authentication error");
+					errorCheck.text = resourceManager.getString('piwik', 'Login_LoginPasswordNotCorrect');
+				}
+				endLoading();
+			}
+			private function loading():void{
+				currentState = "loading";
+				buttonCheck.enabled = false;
+				checkLoad.visible=true;
+			}
+			private function endLoading():void{
+				currentState = "normal";
+				buttonCheck.enabled = true;
+				checkLoad.visible=false;
+			}
+			
+			private function goSelectWebsites(list:Array):void{
+				navigator.pushView(CreateProfileSelect, list);
+			}
+			private function escapeString(str:String):String{
+				var pattern:RegExp = new RegExp("'", "sg");
+				trace(pattern);
+				return str.replace(pattern, "&quote;");
+			}
+			
+			
+			private function changeAn():void{
+				if(free.selected){
+					userForm.enabled = false;
+					passForm.enabled = false;
+				}else{
+					userForm.enabled = true;
+					passForm.enabled = true;
+				}
+			}
+			
+		]]>
+	</fx:Script>
+	<fx:Declarations>
+		<!-- Placer ici les éléments non visuels (services et objets de valeur, par exemple). -->
+		
+		<mx:StringValidator id="validUrl" source="{urlSite}" property="text" minLength="5" required="true" />
+		
+		<fx:Array id="validators">
+			<mx:StringValidator id="validUser" source="{user}" property="text" minLength="1" required="true" />
+			<mx:StringValidator id="validPass" source="{pass}" property="text" minLength="1" required="true" />
+		</fx:Array>
+		
+		<s:RadioButtonGroup id="reportDate" />
+	</fx:Declarations>
+	
+	<s:navigationContent>
+		<s:Button styleName="buttonBack" visible="{FlexGlobals.topLevelApplication.showBackButton}" click="navigator.popView()">
+			<s:icon>
+				<s:MultiDPIBitmapSource source160dpi="@Embed('assets/icons/low/ic_menu_back.png')"
+										source240dpi="@Embed('assets/icons/med/ic_menu_back.png')"
+										source320dpi="@Embed('assets/icons/high/ic_menu_back.png')" />
+			</s:icon>
+		</s:Button>
+	</s:navigationContent>
+	
+	<s:states>
+		<s:State name="normal" />
+		<s:State name="loading" />
+	</s:states>
+	
+	<s:Scroller width="100%" height="100%" top="10">
+		<s:VGroup width="100%" height="100%" gap="18" paddingBottom="10" horizontalAlign="center">
+			
+			<s:VGroup>
+				<s:Label text="{resourceManager.getString('piwik', 'Mobile_AccessUrlLabel')}" />
+				
+				<s:TextInput id="urlSite" tabIndex="1" needsSoftKeyboard="true" softKeyboardType="url" returnKeyLabel="next" maxWidth="400" height="40" enter="user.setFocus()" />
+				<s:VGroup gap="0">
+					<s:Label color="#898989" text="http://www.yourdomain.com/piwik/" />
+				</s:VGroup>
+			</s:VGroup>
+			
+			<s:VGroup maxWidth="470" >
+				<s:CheckBox id="free" selected="false" label="{resourceManager.getString('piwik', 'Mobile_AnonymousAccess')}" change="changeAn()" />
+			</s:VGroup>
+			
+			<s:VGroup id="userForm">
+				<s:Label text="{resourceManager.getString('piwik', 'General_Username')}" />
+				<s:TextInput id="user" tabIndex="2" returnKeyLabel="next" needsSoftKeyboard="true" maxWidth="400" height="40" enter="pass.setFocus()" />
+			</s:VGroup>
+			
+			<s:VGroup id="passForm">
+				<s:Label text="{resourceManager.getString('piwik', 'Login_Password')}" />
+				<s:TextInput id="pass" tabIndex="3" returnKeyLabel="go" needsSoftKeyboard="true" maxWidth="400" height="40" displayAsPassword="true" enter="stage.focus=null;validInput()" />
+			</s:VGroup>
+			
+			<s:VGroup>
+				<s:Label id="errorCheck" color="red" />
+				<s:Button id="buttonCheck" excludeFrom="loading" width="300" maxWidth="440" height="60" label="{resourceManager.getString('piwik', 'Login_LogIn')}" click="validInput()" />
+				<s:BusyIndicator id="checkLoad" width="60" height="60" excludeFrom="normal" />
+			</s:VGroup>
+			
+		</s:VGroup>
+	</s:Scroller>
+</s:View>

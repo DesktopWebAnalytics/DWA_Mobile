@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+	DWA_Mobile
+
+	Link http://www.desktop-web-analytics.com
+	Link https://github.com/DesktopWebAnalytics
+	Licence http://www.gnu.org/licenses/gpl-3.0-standalone.html GPL v3 or later
+
+	$Id: Edit.mxml 237 2011-12-15 15:25:06Z benoit $
+-->
+<s:View xmlns:fx="http://ns.adobe.com/mxml/2009" 
+		xmlns:s="library://ns.adobe.com/flex/spark" title="Edit"
+		viewActivate="view1_viewActivateHandler(event)" initialize="view1_initializeHandler(event)">
+	<fx:Script>
+		<![CDATA[
+			import com.dwa.common.database.DataBase;
+			import com.dwa.common.profile.Profile;
+			
+			import mx.core.FlexGlobals;
+			import mx.events.FlexEvent;
+			
+			import spark.events.ViewNavigatorEvent;
+			
+			private const MINPERIOD:int = 2;
+			private const MAXPERIOD:int = 30;
+			
+			private var selectedProfile:Profile;
+			
+			protected function view1_viewActivateHandler(event:ViewNavigatorEvent):void
+			{
+				// TODO Auto-generated method stub
+				
+				selectedProfile = data as Profile;
+				
+				if(selectedProfile.websiteDay) reportToday.selected;
+				else reportYesterday.selected;
+				
+				period.text = selectedProfile.websitePeriod.toString();
+			}
+			
+			protected function view1_initializeHandler(event:FlexEvent):void
+			{
+				// TODO Auto-generated method stub
+				if(!FlexGlobals.topLevelApplication.isTablet){
+					actionBarVisible = false;
+				}
+			}
+			private function incrementPeriod():void{
+				var val:int = parseInt(period.text)+1;
+				if(val > MAXPERIOD){
+					period.text = MAXPERIOD.toString();
+				}else{
+					period.text = val.toString();
+				}
+			}
+			private function decrementPeriod():void{
+				var val:int = parseInt(period.text)-1;
+				if(val < MINPERIOD){
+					period.text = MINPERIOD.toString();
+				}else{
+					period.text = val.toString();
+				}
+			}
+			
+			private function saveSettings():void{
+				currentState = "loading";
+				checkLoad.visible=true;
+				errorMessage.text = "";
+				
+				var day:Boolean=true;
+				
+				var per:int = parseInt(period.text);
+				if(per < MINPERIOD) per = MINPERIOD;
+				else if(per > MAXPERIOD) per = MAXPERIOD;
+				
+				if(reportYesterday.selected) day = false;
+				
+				var dataBase:DataBase = new DataBase();
+				
+				dataBase.addEventListener(ErrorEvent.ERROR, error, false, 0, true);
+				dataBase.addEventListener(Event.COMPLETE, complete, false, 0, true);
+				dataBase.updateProfile(selectedProfile.dbId, per, day);
+			}
+			
+			private function error(event:ErrorEvent):void{
+				trace("error when updating profile");
+				errorMessage.text = "";
+				currentState = "normal";
+				checkLoad.visible=false;
+			}
+			private function complete(event:Event):void{
+				trace("profile updated");
+				FlexGlobals.topLevelApplication.getWebsites();
+			}
+			
+		]]>
+	</fx:Script>
+	<fx:Declarations>
+		<!-- Placer ici les éléments non visuels (services et objets de valeur, par exemple). -->
+	</fx:Declarations>
+	<s:navigationContent>
+		<s:Button styleName="buttonBack" visible="{FlexGlobals.topLevelApplication.showBackButton}" click="navigator.popView()">
+			<s:icon>
+				<s:MultiDPIBitmapSource source160dpi="@Embed('assets/icons/low/ic_menu_back.png')"
+										source240dpi="@Embed('assets/icons/med/ic_menu_back.png')"
+										source320dpi="@Embed('assets/icons/high/ic_menu_back.png')" />
+			</s:icon>
+		</s:Button>
+	</s:navigationContent>
+	
+	<s:states>
+		<s:State name="normal" />
+		<s:State name="loading" />
+	</s:states>
+	
+	<s:Scroller width="100%" height="100%" top="10">
+		<s:VGroup width="100%" height="100%" paddingLeft="10" paddingRight="10" paddingBottom="10">
+			<s:VGroup width="100%" paddingTop="20">
+				<s:VGroup width="100%">
+					<s:Label width="100%" text="{resourceManager.getString('piwik', 'UsersManager_ReportToLoadByDefault')}" />
+					<s:VGroup gap="0">
+						<s:RadioButton id="reportToday" label="{resourceManager.getString('piwik', 'General_Today')}" groupName="reportDate" selected="true" />
+						<s:RadioButton id="reportYesterday" label="{resourceManager.getString('piwik', 'General_Yesterday')}" groupName="reportDate" />
+					</s:VGroup>
+				</s:VGroup>
+				<s:VGroup width="100%" verticalAlign="middle">
+					<s:Label width="100%" text="{resourceManager.getString('piwik', 'VisitorGenerator_DaysToCompute')}" />
+					<s:HGroup verticalAlign="middle">
+						<s:Button label="-" height="60" click="decrementPeriod()" />
+						<s:TextInput id="period" width="70" softKeyboardType="number" textAlign="center" height="60" text="10" restrict="0-9" maxChars="2" />
+						<s:Button label="+" height="60" click="incrementPeriod()" />
+						
+						<s:Label id="limitPeriod" paddingLeft="5" />
+					</s:HGroup>
+				</s:VGroup>
+			</s:VGroup>
+			<s:Label id="errorMessage" width="100%" textAlign="center" color="red" />
+			<s:HGroup width="100%" horizontalAlign="center">
+				<s:Button id="saveButton" excludeFrom="loading" width="300" maxWidth="440" height="60" label="{resourceManager.getString('piwik', 'General_Save')}" click="saveSettings()" />
+				<s:BusyIndicator id="checkLoad" width="60" height="60" includeIn="loading" />
+			</s:HGroup>
+		</s:VGroup>
+	</s:Scroller>
+</s:View>

@@ -1,0 +1,252 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+	DWA_Mobile
+
+	Link http://www.desktop-web-analytics.com
+	Link https://github.com/DesktopWebAnalytics
+	Licence http://www.gnu.org/licenses/gpl-3.0-standalone.html GPL v3 or later
+
+	$Id: DWA_Mobile.mxml 242 2011-12-17 13:40:23Z benoit $
+-->
+<s:Application xmlns:fx="http://ns.adobe.com/mxml/2009" 
+							xmlns:s="library://ns.adobe.com/flex/spark" 
+							splashScreenImage="views.AppSplashScreen" splashScreenScaleMode="none"
+							resize="application1_resizeHandler(event)" initialize="application1_initializeHandler(event)"
+							creationComplete="complete(event)"
+							activate="activate()" deactivate="deactivate()"
+							locale="{resourceManager.getString('piwik', 'General_Locale')}"
+							direction="{languageDirection}"
+							layoutDirection="{languageDirection}"
+							applicationDPI="160">
+	<fx:Script>
+		<![CDATA[
+			import com.dwa.common.database.DataBase;
+			import com.dwa.common.profile.Profile;
+			
+			import mx.events.FlexEvent;
+			import mx.events.ResizeEvent;
+			import mx.managers.PopUpManager;
+			
+			import spark.components.SplitViewNavigator;
+			import spark.components.View;
+			import spark.transitions.CrossFadeViewTransition;
+			
+			import views.Dashboard;
+			import views.Home;
+			
+			private var checkDB:DataBase;
+			
+			private var listOfWebsites:Array;
+			
+			[Bindable]
+			private var languageDirection:String = "ltr";
+			
+			public var isTablet:Boolean;
+			public var isSmallScreen:Boolean;
+			
+			[Bindable]
+			public var showBackButton:Boolean;
+			
+			public var selectedProfile:Profile;
+			public var selectedPeriodDate:String;
+			
+			public var selectedStartDate:Date;
+			public var selectedEndDate:Date;
+			
+			public var currentView:Class;
+			
+			private function activate():void{
+				trace("activate app");
+				//this.frameRate = 20;
+				
+				if(!showBackButton) systemManager.stage.addEventListener(KeyboardEvent.KEY_DOWN, deviceKeyBackHandler);
+			}
+			private function deactivate():void{
+				trace("deactivate app");
+				//this.frameRate = 0.1;
+				
+				if(!showBackButton) systemManager.stage.removeEventListener(KeyboardEvent.KEY_DOWN, deviceKeyBackHandler);
+			}
+			public function changeLocale(locale:String):void{
+				resourceManager.localeChain = [locale];
+				
+				//languageDirection = resourceManager.getString('piwik', 'General_LayoutDirection');
+			}
+			private function invoke(event:InvokeEvent):void{
+				trace('browser invoke');
+				if(event.currentDirectory != null){
+					trace("Current directory="+event.currentDirectory.nativePath);
+				}else{
+					trace("--no directory information available--");
+				}
+				
+				if(event.arguments.length > 0){
+					trace("Arguments: " + event.arguments.toString());
+				}else{
+					trace("--no arguments--");
+				}
+			}
+			private function checkDataBase():void{
+				checkDB = new DataBase();
+				
+				checkDB.addEventListener(Event.COMPLETE, finish);
+				checkDB.addEventListener(ErrorEvent.ERROR, error);
+				checkDB.dataBaseExist();
+			}
+			private function removeListeners():void{
+				checkDB.removeEventListener(Event.COMPLETE, finish);
+				checkDB.removeEventListener(ErrorEvent.ERROR, error);
+				
+				checkDB = null;
+			}
+			private function finish(event:Event):void{
+				removeListeners();
+				
+				trace("db checked");
+				getWebsites();
+			}
+			
+			private function error(event:ErrorEvent):void{
+				trace("error check db");
+				removeListeners();
+			}
+			
+			public function getWebsites():void{
+				trace("get websites");
+				checkDB = new DataBase();
+				checkDB.addEventListener(Event.COMPLETE, resultGetWebsites);
+				checkDB.addEventListener(ErrorEvent.ERROR, errorWebsites);
+				checkDB.getAllWebsites(true);
+			}
+			private function removeWListeners():void{
+				checkDB.removeEventListener(Event.COMPLETE, resultGetWebsites);
+				checkDB.removeEventListener(ErrorEvent.ERROR, errorWebsites);
+				
+				checkDB = null;
+			}
+			private function resultGetWebsites(event:Event):void{
+				listOfWebsites = checkDB.websitesList;
+				
+				removeWListeners();
+				
+				launch();
+			}
+			private function errorWebsites(event:ErrorEvent):void{
+				trace("error get websites");
+				removeWListeners();
+			}
+			private function launch():void{
+				trace("launch");
+				
+				var fade:CrossFadeViewTransition = new CrossFadeViewTransition();
+				fade.duration = 200;
+				
+				viewNavigator.defaultPushTransition = fade;
+				viewNavigator.defaultPopTransition = fade;
+				
+				/* vn.popAll();
+				vn.firstView = views.Home; */
+				
+				viewNavigator.pushView(Home, listOfWebsites);
+			}
+			
+			public function showProfileMenu(profile:Profile):void{
+				trace("show menu");
+			}
+			
+			protected function complete(event:FlexEvent):void
+			{
+				// TODO Auto-generated method stub
+				trace('creation complete');
+				isTablet = height > 960 || width > 960;
+				isSmallScreen = height < 500 || width < 500;
+				
+				checkDataBase();
+				
+				//NativeApplication.nativeApplication.addEventListener(InvokeEvent.INVOKE, invoke);
+				
+				if(Capabilities.isDebugger) changeLocale("en_US");
+			}
+			protected function application1_initializeHandler(event:FlexEvent):void
+			{
+				// TODO Auto-generated method stub
+				if(Capabilities.version.indexOf("AND")){
+					showBackButton = true;
+				}else{
+					showBackButton = false;
+				}
+				
+				if(!showBackButton) {
+					systemManager.stage.addEventListener(KeyboardEvent.KEY_DOWN, deviceKeyBackHandler);
+					trace('handle back button');
+				}
+			}
+			protected function deviceKeyBackHandler(event:KeyboardEvent):void
+			{
+				// TODO Auto-generated method stub
+				
+				if((event.keyCode == Keyboard.BACK) || (event.keyCode == 16777238)){
+					trace('device keyback prevent');
+					event.preventDefault();
+					trace('VN: ' + viewNavigator.length);
+					
+					if(viewNavigator.length > 1){
+						if(viewNavigator.activeView is Dashboard){
+							var activeView:Dashboard = viewNavigator.activeView as Dashboard;
+							
+							if(isTablet){
+								var splitVN:SplitViewNavigator = activeView.splitViewNavigator as SplitViewNavigator;
+								
+								if(splitVN.viewNavigatorPopUp.isOpen){
+									splitVN.hideViewNavigatorPopUp();
+								}else{
+									viewNavigator.popView();
+								}
+							}else{
+								var phoneNav:ViewNavigator = activeView.phoneNavigator as ViewNavigator;
+								if(phoneNav.length > 1){
+									phoneNav.popView();
+								}else{
+									viewNavigator.popView();
+								}
+							}
+							
+						}else{
+							viewNavigator.popView();
+						}
+						trace('prevent exit');
+					}else{
+						NativeApplication.nativeApplication.exit();
+						trace("Exit");
+					}
+				}
+			}
+			
+			protected function application1_resizeHandler(event:ResizeEvent):void
+			{
+				// TODO Auto-generated method stub
+				trace('resize');
+				var isPortrait:Boolean = height > width;
+				currentState = isPortrait ? "portrait":"landscape";
+			}
+			
+			
+		]]>
+	</fx:Script>
+	
+	<fx:Style source="style/Style.css" />
+	
+	<fx:Declarations>
+		<!-- Placer ici les éléments non visuels (services et objets de valeur, par exemple). -->
+	</fx:Declarations>
+	
+	<fx:Metadata>
+		[ResourceBundle("piwik")]
+	</fx:Metadata>
+	
+	<s:states>
+		<s:State name="portrait" />
+		<s:State name="landscape" />
+	</s:states>
+	<s:ViewNavigator id="viewNavigator" width="100%" height="100%" />
+</s:Application>

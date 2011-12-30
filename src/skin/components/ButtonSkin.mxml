@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+	DWA_Mobile
+
+	Link http://www.desktop-web-analytics.com
+	Link https://github.com/DesktopWebAnalytics
+	Licence http://www.gnu.org/licenses/gpl-3.0-standalone.html GPL v3 or later
+
+	$Id: ButtonSkin.mxml 237 2011-12-15 15:25:06Z benoit $
+-->
+<s:Skin xmlns:fx="http://ns.adobe.com/mxml/2009" 
+		xmlns:s="library://ns.adobe.com/flex/spark">
+	<!-- host component -->
+	<fx:Metadata>
+		[HostComponent("spark.components.Button")]
+	</fx:Metadata>
+	
+	<!-- states -->
+	<s:states>
+		<s:State name="disabled" />
+		<s:State name="down" />
+		<s:State name="over" />
+		<s:State name="up" />
+	</s:states>
+	
+	<!-- SkinParts
+	name=labelDisplay, type=spark.core.IDisplayText, required=false
+	name=iconDisplay, type=spark.primitives.BitmapImage, required=false
+	-->
+	<s:Rect id="fill" left="1" right="1" top="1" bottom="1">
+		<s:fill>
+			<s:LinearGradient rotation="90">
+				<s:GradientEntry color="0xFF9E00" ratio="0.1" alpha.down=".7" />
+				<s:GradientEntry color="0xFF7D01" ratio="1" alpha.down=".7" />
+			</s:LinearGradient>
+		</s:fill>
+	</s:Rect>
+	
+	<s:Rect id="border" left="0" right="0" top="0" bottom="0" width="69" height="20">
+		<s:stroke>
+			<s:LinearGradientStroke rotation="90" weight="1">
+				<s:GradientEntry color="0x000000" 
+								 alpha="0.5625"
+								 alpha.down="0.6375" />
+				<s:GradientEntry color="0x000000" 
+								 alpha="0.75" 
+								 alpha.down="0.85" />
+			</s:LinearGradientStroke>
+		</s:stroke>
+	</s:Rect>
+	
+	<s:Label id="labelDisplay" textAlign="center"
+			 verticalAlign="middle"
+			 maxDisplayedLines="1"
+			 horizontalCenter="0" verticalCenter="1"
+			 left="10" right="10" top="2" bottom="2" />
+</s:Skin>
