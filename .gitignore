@@ -25,3 +25,4 @@ src/blackberry-tablet.xml
 #Java Noise
 *.class
 
+blackberry-tablet.xml
