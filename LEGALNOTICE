@@ -1,0 +1,29 @@
+	
+	DWA_Mobile
+
+	Copyright (C) 2011 Benoit Pouzet
+
+	This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+    
+SEPARATELY LICENSED COMPONENTS AND LIBRARIES
+	
+	The following components/libraries are distributed in this package,
+	and subject to their respective licenses
+	
+	Name: DWAClassesLibrary
+	Link: https://github.com/DesktopWebAnalytics
+	License: LGPL
+	Notes:
+	- depends on as3corelib (http://code.google.com/p/as3corelib/); New BSD
+	- depends on Flex SDK (http://opensource.adobe.com/wiki/display/flexsdk/Get+Source+Code); MPL 1.1 and Adobe Flex SDK License
