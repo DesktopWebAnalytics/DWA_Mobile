@@ -6,7 +6,7 @@
 	Link https://github.com/DesktopWebAnalytics
 	Licence http://www.gnu.org/licenses/gpl-3.0-standalone.html GPL v3 or later
 
-	$Id: VisitsPerLocalTime.mxml 237 2011-12-15 15:25:06Z benoit $
+	$Id: VisitsPerLocalTime.mxml 299 2012-03-11 16:04:02Z benoit $
 -->
 <s:View xmlns:fx="http://ns.adobe.com/mxml/2009" 
 				 xmlns:s="library://ns.adobe.com/flex/spark"
@@ -35,7 +35,7 @@
 			}
 			private function resultApi(event:Event):void{
 				trace("result local time");
-				result = report.resultCollectionBasic;
+				result = report.resultCollectionRow;
 				clear();
 				
 				if(FlexGlobals.topLevelApplication.isTablet){
