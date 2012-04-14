@@ -6,6 +6,8 @@ It works on IOS, Android and QNX Playbook platforms.
 
 Developed in as3/Flex/AIR.
 
+This software is under GPL v3 license.
+
 ## Contributing
 
 Everybody is welcome to contribute. You can help out in several ways.
