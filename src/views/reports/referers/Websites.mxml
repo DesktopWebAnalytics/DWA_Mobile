@@ -22,17 +22,20 @@
 			import spark.collections.Sort;
 			import spark.collections.SortField;
 			
+			private var profile:Profile;
+			
 			private var report:Reports;
 			
 			private var result:XMLListCollection;
 			
 			private function initView():void{
-				titleView.text = resourceManager.getString('piwik', 'Referers_SubmenuWebsites') + ' - ' + resourceManager.getString('piwik', 'General_DateRange') + ' ' + dateTimeFormatter.format(FlexGlobals.topLevelApplication.selectedStartDate) + " - " + dateTimeFormatter.format(FlexGlobals.topLevelApplication.selectedEndDate);
+				titleView.text = data + ' - ' + resourceManager.getString('piwik', 'General_DateRange') + ' ' + dateTimeFormatter.format(FlexGlobals.topLevelApplication.selectedStartDate) + " - " + dateTimeFormatter.format(FlexGlobals.topLevelApplication.selectedEndDate);
+				profile = FlexGlobals.topLevelApplication.selectedProfile;
 				
 				report = new Reports();
 				report.addEventListener(Event.COMPLETE, resultCall);
 				report.addEventListener(ErrorEvent.ERROR, error);
-				report.getWebsites(data as Profile, FlexGlobals.topLevelApplication.selectedPeriodDate);
+				report.getWebsites(profile, FlexGlobals.topLevelApplication.selectedPeriodDate);
 			}
 			private function resultCall(event:Event):void{
 				result = report.resultCollectionRow;
