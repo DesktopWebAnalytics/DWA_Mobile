@@ -4,8 +4,6 @@
 	Link http://www.desktop-web-analytics.com
 	Link https://github.com/DesktopWebAnalytics
 	Licence http://www.gnu.org/licenses/gpl-3.0-standalone.html GPL v3 or later
-
-	$Id: ReportsItemRenderer.as 237 2011-12-15 15:25:06Z benoit $
 */
 package views.renderers
 {
@@ -19,6 +17,8 @@ package views.renderers
 		public function ReportsItemRenderer()
 		{
 			super();
+			cacheAsBitmap = true;
+			opaqueBackground = 0xFFFFFF;
 		}
 		private var isHeader:Boolean;
 		
@@ -33,7 +33,7 @@ package views.renderers
 					labelDisplay.setStyle("fontWeight", "bold");
 				}else{
 					isHeader = false;
-					this.height = 60;
+					this.height = 50;
 					
 					labelDisplay.setStyle("fontWeight", "normal");
 				}
@@ -55,7 +55,8 @@ package views.renderers
 				var matrix:Matrix = new Matrix();
 				
 				// draw gradient
-				matrix.createGradientBox(unscaledWidth, unscaledHeight, Math.PI / 2, 0, 0);
+				// rotation PI / 2
+				matrix.createGradientBox(unscaledWidth, unscaledHeight, 1.57, 0, 0);
 				graphics.beginGradientFill(GradientType.LINEAR, colors, alphas, ratios, matrix);
 				graphics.drawRect(0, 0, unscaledWidth, unscaledHeight);
 				graphics.endFill();
