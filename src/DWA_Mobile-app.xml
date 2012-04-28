@@ -25,11 +25,11 @@
 	<id>com.desktop-web-analytics.mobile</id>
 
 	<!-- Used as the filename for the application. Required. -->
-	<filename>DWA_Mobile</filename>
+	<filename>DWA Mobile</filename>
 
 	<!-- The name that is displayed in the AIR application installer. 
 	May have multiple values for each language. See samples or xsd schema file. Optional. -->
-	<name>Desktop Web Analytics</name>
+	<name>DWA Mobile</name>
 	
 	<!-- A string value of the format <0-999>.<0-999>.<0-999> that represents application version which can be used to check for application upgrade. 
 	Values can also be 1-part or 2-part. It is not necessary to have a 3-part value.
@@ -44,7 +44,7 @@
 	<!-- <description></description> -->
 
 	<!-- Copyright information. Optional -->
-	<!-- <copyright></copyright> -->
+	<copyright>License GPL v3</copyright>
 
 	<!-- Publisher ID. Used if you're updating an application created prior to 1.5.3 -->
 	<!-- <publisherID></publisherID> -->
@@ -95,7 +95,7 @@
 		<!-- <maxSize></maxSize> -->
 	<autoOrients>true</autoOrients>
 <!-- 	<aspectRatio>landscape</aspectRatio> -->
-    <fullScreen>true</fullScreen>
+    <fullScreen>false</fullScreen>
     <visible>true</visible>
     <softKeyboardBehavior>none</softKeyboardBehavior>
     <!-- <renderMode>auto</renderMode> -->
