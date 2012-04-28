@@ -33,13 +33,13 @@
 	name=navigationGroup, type=spark.components.Group, required=false
 	name=titleDisplay, type=spark.core.IDisplayText, required=false
 	-->
-	<fxg:ActionBarBackground width="100%" height="65" />
+	<fxg:ActionBarBackground width="100%" height="45" />
 	
-	<s:Group left="0" right="0" top="0" height="65">
+	<s:Group left="0" right="0" top="0" height="45">
 		<s:Group id="titleGroup" />
 		<s:Group id="actionGroup" verticalCenter="0" right="2" />
 		<s:Group id="navigationGroup" verticalCenter="0" left="2" />
-		<s:Label id="titleDisplay" verticalCenter="0" maxDisplayedLines="1" right="{actionGroup.width+5}" left="{navigationGroup.width+5}" />
+		<s:Label id="titleDisplay" verticalCenter="2" maxDisplayedLines="1" right="{actionGroup.width+5}" left="{navigationGroup.width+5}" />
 	</s:Group>
 	
 </s:Skin>
