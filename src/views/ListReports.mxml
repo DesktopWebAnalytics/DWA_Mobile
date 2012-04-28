@@ -40,25 +40,22 @@
 			import views.reports.visitors.VisitsPerServerTime;
 			import views.reports.visitors.WideScreen;
 			
-			private const DAY:int = 86400000;
-			
 			private function initView():void{
 				trace("Liste reports");
-				var start:Date = new Date();
-				var end:Date = new Date();
-				
-				if(!data.websiteDay) end.time = end.time - DAY;
-				start.time = end.time - (DAY * (data.websitePeriod-1));
 				
 				if(FlexGlobals.topLevelApplication.isTablet) {
 					reportsList.selectedIndex = 1;
+					FlexGlobals.topLevelApplication.currentView = Visits;
+					var splitNavigator:SplitViewNavigator = navigator.parentNavigator as SplitViewNavigator;
+					
+					(splitNavigator.getViewNavigatorAt(1) as ViewNavigator).pushView(Visits, reports.getItemAt(1).label);
 				}
 			}
 			private function selectReport():void{
-				var report:String = reportsList.selectedItem.id;
+				var report:Object = reportsList.selectedItem;
 				var goToView:Class;
 				
-				switch(report){
+				switch(report.id){
 					case 'visits':
 						goToView = Visits;
 						break;
@@ -143,12 +140,12 @@
 				FlexGlobals.topLevelApplication.currentView = goToView;
 				
 				if(!FlexGlobals.topLevelApplication.isTablet){
-					navigator.pushView(goToView, data);
+					navigator.pushView(goToView, report.label);
 					reportsList.selectedIndex = -1;
 				}else{
 					var splitNavigator:SplitViewNavigator = navigator.parentNavigator as SplitViewNavigator;
 					
-					(splitNavigator.getViewNavigatorAt(1) as ViewNavigator).pushView(goToView, data);
+					(splitNavigator.getViewNavigatorAt(1) as ViewNavigator).pushView(goToView, report.label);
 				}
 			}
 		]]>
