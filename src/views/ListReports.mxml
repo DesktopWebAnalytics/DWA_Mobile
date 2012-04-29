@@ -5,8 +5,6 @@
 	Link http://www.desktop-web-analytics.com
 	Link https://github.com/DesktopWebAnalytics
 	Licence http://www.gnu.org/licenses/gpl-3.0-standalone.html GPL v3 or later
-
-	$Id: ListReports.mxml 237 2011-12-15 15:25:06Z benoit $
 -->
 <s:View xmlns:fx="http://ns.adobe.com/mxml/2009" 
 				 xmlns:s="library://ns.adobe.com/flex/spark"
@@ -55,7 +53,7 @@
 				var report:Object = reportsList.selectedItem;
 				var goToView:Class;
 				
-				switch(report.id){
+				/* switch(report.id){
 					case 'visits':
 						goToView = Visits;
 						break;
@@ -135,9 +133,11 @@
 					case 'campaigns':
 						goToView = Campaigns;
 						break;
-				}
+				} */
 				
-				FlexGlobals.topLevelApplication.currentView = goToView;
+				goToView = report.view;
+				
+				FlexGlobals.topLevelApplication.currentView = report;
 				
 				if(!FlexGlobals.topLevelApplication.isTablet){
 					navigator.pushView(goToView, report.label);
@@ -158,94 +158,117 @@
 		<s:ArrayList id="reports">
 			<fx:Object>
 				<fx:id>header</fx:id>
+				<fx:view></fx:view>
 				<fx:label>{resourceManager.getString('piwik', 'General_Visitors')}</fx:label>
 			</fx:Object>
 			<fx:Object>
 				<fx:id>visits</fx:id>
+				<fx:view>{Visits}</fx:view>
 				<fx:label>{resourceManager.getString('piwik', 'VisitFrequency_Evolution')}</fx:label>
 			</fx:Object>
 			<fx:Object>
 				<fx:id>visitsLocalTime</fx:id>
+				<fx:view>{VisitsPerLocalTime}</fx:view>
 				<fx:label>{resourceManager.getString('piwik', 'VisitTime_LocalTime')}</fx:label>
 			</fx:Object>
 			<fx:Object>
 				<fx:id>visitsServerTime</fx:id>
+				<fx:view>{VisitsPerServerTime}</fx:view>
 				<fx:label>{resourceManager.getString('piwik', 'VisitTime_ServerTime')}</fx:label>
 			</fx:Object>
 			<fx:Object>
 				<fx:id>configuration</fx:id>
+				<fx:view>{Configurations}</fx:view>
 				<fx:label>{resourceManager.getString('piwik', 'UserSettings_Configurations')}</fx:label>
 			</fx:Object>
 			<fx:Object>
 				<fx:id>browserFamilies</fx:id>
+				<fx:view>{BrowserFamilies}</fx:view>
 				<fx:label>{resourceManager.getString('piwik', 'UserSettings_BrowserFamilies')}</fx:label>
 			</fx:Object>
 			<fx:Object>
 				<fx:id>browsers</fx:id>
+				<fx:view>{Browsers}</fx:view>
 				<fx:label>{resourceManager.getString('piwik', 'UserSettings_Browsers')}</fx:label>
 			</fx:Object>
 			<fx:Object>
 				<fx:id>os</fx:id>
+				<fx:view>{OperatingSystems}</fx:view>
 				<fx:label>{resourceManager.getString('piwik', 'UserSettings_OperatingSystems')}</fx:label>
 			</fx:Object>
 			<fx:Object>
 				<fx:id>resolutions</fx:id>
+				<fx:view>{Resolutions}</fx:view>
 				<fx:label>{resourceManager.getString('piwik', 'UserSettings_Resolutions')}</fx:label>
 			</fx:Object>
 			<fx:Object>
 				<fx:id>wideScreen</fx:id>
+				<fx:view>{WideScreen}</fx:view>
 				<fx:label>{resourceManager.getString('piwik', 'UserSettings_WideScreen')}</fx:label>
 			</fx:Object>
 			<fx:Object>
 				<fx:id>plugins</fx:id>
+				<fx:view>{Plugins}</fx:view>
 				<fx:label>{resourceManager.getString('piwik', 'UserSettings_Plugins')}</fx:label>
 			</fx:Object>
 			<fx:Object>
 				<fx:id>locations</fx:id>
+				<fx:view>{Locations}</fx:view>
 				<fx:label>{resourceManager.getString('piwik', 'UserCountry_WidgetCountries')}</fx:label>
 			</fx:Object>
 			<fx:Object>
 				<fx:id>providers</fx:id>
+				<fx:view>{Providers}</fx:view>
 				<fx:label>{resourceManager.getString('piwik', 'Provider_WidgetProviders')}</fx:label>
 			</fx:Object>
 			<fx:Object>
 				<fx:id>header</fx:id>
+				<fx:view></fx:view>
 				<fx:label>{resourceManager.getString('piwik', 'Actions_Actions')}</fx:label>
 			</fx:Object>
 			<fx:Object>
 				<fx:id>pageUrls</fx:id>
+				<fx:view>{Pages}</fx:view>
 				<fx:label>{resourceManager.getString('piwik', 'Actions_SubmenuPages')}</fx:label>
 			</fx:Object>
 			<fx:Object>
 				<fx:id>pageTitles</fx:id>
+				<fx:view>{PageTitles}</fx:view>
 				<fx:label>{resourceManager.getString('piwik', 'Actions_SubmenuPageTitles')}</fx:label>
 			</fx:Object>
 			<fx:Object>
 				<fx:id>outlinks</fx:id>
+				<fx:view>{Outlinks}</fx:view>
 				<fx:label>{resourceManager.getString('piwik', 'Actions_SubmenuOutlinks')}</fx:label>
 			</fx:Object>
 			<fx:Object>
 				<fx:id>downloads</fx:id>
+				<fx:view>{Outlinks}</fx:view>
 				<fx:label>{resourceManager.getString('piwik', 'Actions_SubmenuDownloads')}</fx:label>
 			</fx:Object>
 			<fx:Object>
 				<fx:id>header</fx:id>
+				<fx:view></fx:view>
 				<fx:label>{resourceManager.getString('piwik', 'Referers_Referers')}</fx:label>
 			</fx:Object>
 			<fx:Object>
 				<fx:id>searchEngines</fx:id>
+				<fx:view>{SearchEngines}</fx:view>
 				<fx:label>{resourceManager.getString('piwik', 'Referers_SearchEngines')}</fx:label>
 			</fx:Object>
 			<fx:Object>
 				<fx:id>keywords</fx:id>
+				<fx:view>{Keywords}</fx:view>
 				<fx:label>{resourceManager.getString('piwik', 'Referers_Keywords')}</fx:label>
 			</fx:Object>
 			<fx:Object>
 				<fx:id>websites</fx:id>
+				<fx:view>{Websites}</fx:view>
 				<fx:label>{resourceManager.getString('piwik', 'Referers_SubmenuWebsites')}</fx:label>
 			</fx:Object>
 			<fx:Object>
 				<fx:id>campaigns</fx:id>
+				<fx:view>{Campaigns}</fx:view>
 				<fx:label>{resourceManager.getString('piwik', 'Referers_SubmenuCampaigns')}</fx:label>
 			</fx:Object>
 		</s:ArrayList>

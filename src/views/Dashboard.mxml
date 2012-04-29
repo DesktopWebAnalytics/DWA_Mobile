@@ -13,17 +13,12 @@
 		creationComplete="dashboardComplete(event)" destructionPolicy="never">
 	<fx:Script>
 		<![CDATA[
-			import com.dwa.common.profile.Profile;
-			
 			import mx.core.FlexGlobals;
 			import mx.events.FlexEvent;
-			import mx.events.ResizeEvent;
 			
 			import spark.events.ViewNavigatorEvent;
 			import spark.formatters.DateTimeFormatter;
 			import spark.transitions.CrossFadeViewTransition;
-			
-			import views.reports.visitors.Visits;
 			
 			private var isTablet:Boolean;
 			
@@ -46,14 +41,12 @@
 					
 					fullNavigator.defaultPopTransition = fade;
 					fullNavigator.defaultPushTransition = fade;
-					if(listNavigator) {
-						listNavigator.actionBar.visible = false;
-						
-						listNavigator.defaultPopTransition = fade;
-						listNavigator.defaultPushTransition = fade;
-					}
-				}
-				else {
+					
+					listNavigator.actionBar.visible = false;
+					listNavigator.defaultPopTransition = fade;
+					listNavigator.defaultPushTransition = fade;
+					
+				}else {
 					currentState = "phone";
 					phoneNavigator.defaultPopTransition = fade;
 					phoneNavigator.defaultPushTransition = fade;
@@ -147,13 +140,16 @@
 				
 				menuDateCallout.closeDropDown();
 				
+				var view:Class = FlexGlobals.topLevelApplication.currentView.view;
+				var dataView:String = FlexGlobals.topLevelApplication.currentView.label;
+				
 				if(isTablet){
-					fullNavigator.pushView(FlexGlobals.topLevelApplication.currentView, data);
+					fullNavigator.pushView(view, dataView);
 				}else{
 					if(phoneNavigator.activeView is ListReports){
 						
 					}else{
-						phoneNavigator.replaceView(FlexGlobals.topLevelApplication.currentView, data);
+						phoneNavigator.replaceView(view, dataView);
 					}
 				}
 			}
@@ -167,7 +163,7 @@
 	</fx:Declarations>
 	<s:navigationContent>
 		<s:Button id="dashboardBackButton" styleName="actionButton" label="{resourceManager.getString('piwik', 'Mobile_NavigationBack')}" visible="{FlexGlobals.topLevelApplication.showBackButton}" click="popView()" />
-		<s:Button id="reportsButton" height="36" styleName="actionButton" includeIn="tablet" visible="{(height>width)? true:false}" label="Reports" click="splitViewNavigator.showFirstViewNavigatorInPopUp(reportsButton)" />
+		<s:Button id="reportsButton" styleName="actionButton" label="Reports" includeIn="tablet" visible="{(height>width)? true:false}" click="splitViewNavigator.showFirstViewNavigatorInPopUp(reportsButton)" />
 	</s:navigationContent>
 	
 	<s:navigationLayout>
