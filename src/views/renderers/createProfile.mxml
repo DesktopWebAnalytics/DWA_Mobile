@@ -5,17 +5,16 @@
 	Link http://www.desktop-web-analytics.com
 	Link https://github.com/DesktopWebAnalytics
 	Licence http://www.gnu.org/licenses/gpl-3.0-standalone.html GPL v3 or later
-
-	$Id: createProfile.mxml 237 2011-12-15 15:25:06Z benoit $
 -->
 <s:ItemRenderer xmlns:fx="http://ns.adobe.com/mxml/2009" 
 				xmlns:s="library://ns.adobe.com/flex/spark" 
-				autoDrawBackground="true" dataChange="dataChange()">
+				opaqueBackground="0xFF0000">
 	
 	<fx:Script>
 		<![CDATA[
 			
-			private function dataChange():void{
+			override public function set data(value:Object):void{
+				super.data = value;
 				if(data==null) return;
 				
 				website.label = data.websiteName;
