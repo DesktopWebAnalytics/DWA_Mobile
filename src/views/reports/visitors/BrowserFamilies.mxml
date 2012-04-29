@@ -5,22 +5,18 @@
 	Link http://www.desktop-web-analytics.com
 	Link https://github.com/DesktopWebAnalytics
 	Licence http://www.gnu.org/licenses/gpl-3.0-standalone.html GPL v3 or later
-
-	$Id: BrowserFamilies.mxml 299 2012-03-11 16:04:02Z benoit $
 -->
-<s:View xmlns:fx="http://ns.adobe.com/mxml/2009" 
+<s:View xmlns:fx="http://ns.adobe.com/mxml/2009"
 		xmlns:s="library://ns.adobe.com/flex/spark"
-		viewActivate="initView()" currentState="loading" actionBarVisible="false" xmlns:states="views.states.*" xmlns:mx="library://ns.adobe.com/flex/mx">
+		xmlns:states="views.states.*"
+		actionBarVisible="false" currentState="loading" viewActivate="initView()">
 	<fx:Script>
 		<![CDATA[
 			import com.dwa.common.profile.Profile;
 			import com.dwa.common.reports.Reports;
 			
-			import mx.charts.events.ChartItemEvent;
-			import mx.charts.series.items.PieSeriesItem;
 			import mx.collections.XMLListCollection;
 			import mx.core.FlexGlobals;
-			import mx.effects.easing.Elastic;
 			
 			private var profile:Profile;
 			
@@ -55,75 +51,52 @@
 			}
 			
 			private function compute():void{
-				currentState = "chart";
+				currentState = "tab";
 				
-				pieSeries.nameField = "label";
-				pieSeries.field = "nb_visits";
-				
-				pieChartBrowserFamilies.dataProvider = result;
-			}
-			
-			private function pieChart_itemClick(evt:ChartItemEvent):void {
-				var item:PieSeriesItem = evt.hitData.chartItem as PieSeriesItem;
-				var degrees:Number = radiansToDegrees(item.startAngle);
-				var arr:Array = [];
-				/* if (checkBox.selected) {
-				arr[item.index] = 0.2;
-				} */
-				arr[item.index] = 0.2;
-				
-				pieSeries.perWedgeExplodeRadius = arr;
-				pieSeries.startAngle -= degrees;
-				
-				result.refresh();
-				
-			}
-			
-			private function radiansToDegrees(radians:Number):Number {
-				return radians * (180 / Math.PI);
-			}
-			
-			private function displayBrowserFamilies(data:Object, field:String, index:Number, percentValue:Number):String {
-				var temp:String = rounding.format(percentValue);
-				return data.label +": " + temp + "%" + "\n" + resourceManager.getString('piwik', 'General_ColumnNbVisits') + ": " + data.nb_visits;
+				list.dataProvider = result;
 			}
 		]]>
 	</fx:Script>
 	<fx:Declarations>
 		<!-- Placer ici les éléments non visuels (services et objets de valeur, par exemple). -->
 		
-		<s:DateTimeFormatter id="dateTimeFormatter" locale="{resourceManager.getString('piwik', 'General_Locale')}" timeStyle="none" />
-		
-		<mx:NumberFormatter id="rounding" precision="1" />
-		
-		<mx:SeriesInterpolate id="interpolate" duration="1200" easingFunction="{Elastic.easeOut}" />
+		<s:DateTimeFormatter id="dateTimeFormatter"
+							 locale="{resourceManager.getString('piwik', 'General_Locale')}"
+							 timeStyle="none"/>
 	</fx:Declarations>
 	
 	<s:states>
-		<s:State name="loading" />
-		<s:State name="chart" />
-		<s:State name="error" />
+		<s:State name="loading"/>
+		<s:State name="chart"/>
+		<s:State name="tab"/>
+		<s:State name="error"/>
 	</s:states>
 	
 	<s:layout>
-		<s:VerticalLayout paddingTop="10" paddingLeft="5" paddingRight="5" paddingBottom="5" />
+		<s:VerticalLayout paddingBottom="5" paddingLeft="5" paddingRight="5" paddingTop="10"/>
 	</s:layout>
 	
-	<s:Label id="titleView" width="100%" fontSize="20" textAlign="center" />
+	<s:Label id="titleView" width="100%"/>
 	
-	<states:Loader width="100%" height="100%" includeIn="loading" />
+	<states:Loader includeIn="loading" width="100%" height="100%"/>
 	
-	<states:Error id="errorState" width="100%" height="100%" includeIn="error" />
+	<states:Error id="errorState" includeIn="error" width="100%" height="100%"/>
 	
-	<s:Group width="100%" height="100%" includeIn="chart">
-		<mx:PieChart id="pieChartBrowserFamilies" showDataTips="true" width="100%" height="100%" itemClick="pieChart_itemClick(event)">
-			<mx:series>
-				<mx:PieSeries id="pieSeries" labelPosition="callout" labelFunction="{displayBrowserFamilies}" showDataEffect="{interpolate}">
-					<mx:filters>
-						<s:DropShadowFilter />
-					</mx:filters>
-				</mx:PieSeries>
-			</mx:series>
-		</mx:PieChart>
+	<s:Group includeIn="chart" width="100%" height="100%">
+		
+	</s:Group>
+	
+	<s:Group includeIn="tab" width="100%" height="100%">
+		<s:layout>
+			<s:VerticalLayout />
+		</s:layout>
+		<s:SkinnableContainer id="legend" width="100%" height="40">
+			<s:Label left="2" top="10"
+					 text="{resourceManager.getString('piwik', 'UserSettings_ColumnBrowserFamily')}"/>
+			<s:Label right="2" top="10"
+					 text="{resourceManager.getString('piwik', 'General_ColumnNbVisits')}"/>
+		</s:SkinnableContainer>
+		
+		<s:List id="list" width="100%" height="100%" itemRenderer="views.renderers.ListRenderer" />
 	</s:Group>
 </s:View>

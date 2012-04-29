@@ -5,21 +5,19 @@
 	Link http://www.desktop-web-analytics.com
 	Link https://github.com/DesktopWebAnalytics
 	Licence http://www.gnu.org/licenses/gpl-3.0-standalone.html GPL v3 or later
-
-	$Id: VisitsPerLocalTime.mxml 299 2012-03-11 16:04:02Z benoit $
 -->
-<s:View xmlns:fx="http://ns.adobe.com/mxml/2009" 
-				 xmlns:s="library://ns.adobe.com/flex/spark"
-				 viewActivate="initView()" currentState="loading" actionBarVisible="false" xmlns:mx="library://ns.adobe.com/flex/mx" xmlns:views="views.*" xmlns:states="views.states.*" resize="view1_resizeHandler(event)">
+<s:View xmlns:fx="http://ns.adobe.com/mxml/2009"
+		xmlns:s="library://ns.adobe.com/flex/spark"
+		xmlns:views="views.*"
+		xmlns:states="views.states.*"
+		actionBarVisible="false" currentState="loading" viewActivate="initView()">
 	<fx:Script>
 		<![CDATA[
 			import com.dwa.common.profile.Profile;
 			import com.dwa.common.reports.Reports;
 			
-			import mx.collections.ArrayList;
 			import mx.collections.XMLListCollection;
 			import mx.core.FlexGlobals;
-			import mx.events.ResizeEvent;
 			
 			private var profile:Profile;
 			
@@ -41,19 +39,10 @@
 				result = report.resultCollectionRow;
 				clear();
 				
-				if(FlexGlobals.topLevelApplication.isTablet){
-					currentState = "viewTablet";
-					//serverChart.dataProvider = result;
-					//list.dataProvider = result;
-				}else{
-					if(FlexGlobals.topLevelApplication.currentState == "portrait"){
-						currentState = "viewPortrait";
-						//list.dataProvider = result;
-					}else{
-						currentState = "viewLandscape";
-						//serverChart.dataProvider = result;
-					}
-				}
+				currentState = "tab";
+				
+				list.dataProvider = result;
+				
 			}
 			private function error(event:ErrorEvent):void{
 				trace("error: " + event.text);
@@ -67,98 +56,46 @@
 				report = null;
 			}
 			
-			protected function view1_resizeHandler(event:ResizeEvent):void
-			{
-				// TODO Auto-generated method stub
-				var isPortrait:Boolean = height > width;
-				
-				if(currentState != "loading" && currentState != "error" && !FlexGlobals.topLevelApplication.isTablet){
-					if(isPortrait){
-						currentState = "viewPortrait";
-						//if(list.dataProvider==null) list.dataProvider = result;
-					}else{
-						currentState = "viewLandscape";
-						//if(serverChart.dataProvider==null) serverChart.dataProvider = result;
-					}
-				}
-				
-			}
-			
 		]]>
 	</fx:Script>
 	<fx:Declarations>
 		<!-- Placer ici les éléments non visuels (services et objets de valeur, par exemple). -->
 		
-		<mx:SeriesInterpolate id="interpolateIn" duration="1000" />
-		
-		<s:DateTimeFormatter id="dateTimeFormatter" locale="{resourceManager.getString('piwik', 'General_Locale')}" timeStyle="none" />
+		<s:DateTimeFormatter id="dateTimeFormatter"
+							 locale="{resourceManager.getString('piwik', 'General_Locale')}"
+							 timeStyle="none"/>
 	</fx:Declarations>
 	
 	<s:states>
-		<s:State name="loading" />
-		<s:State name="viewTablet" />
-		<s:State name="viewPortrait" stateGroups="view, portrait" />
-		<s:State name="viewLandscape" stateGroups="view, landscape" />
-		<s:State name="error" />
+		<s:State name="loading"/>
+		<s:State name="chart"/>
+		<s:State name="tab"/>
+		<s:State name="error"/>
 	</s:states>
 	
 	<s:layout>
-		<s:VerticalLayout paddingTop="10" paddingLeft="5" paddingRight="5" paddingBottom="5" />
+		<s:VerticalLayout paddingBottom="5" paddingLeft="5" paddingRight="5" paddingTop="10"/>
 	</s:layout>
 	
-	<s:Label id="titleView" width="100%" fontSize="20" textAlign="center" />
+	<s:Label id="titleView" width="100%"/>
 	
-	<states:Loader width="100%" height="100%" includeIn="loading" />
+	<states:Loader includeIn="loading" width="100%" height="100%"/>
 	
-	<states:Error id="errorState" width="100%" height="100%" includeIn="error" />
+	<states:Error id="errorState" includeIn="error" width="100%" height="100%"/>
 	
-	<s:Group id="chart" width="100%" height="100%" includeIn="viewTablet, viewLandscape" creationComplete="serverChart.dataProvider=result" >
-		<mx:ColumnChart id="serverChart" showDataTips="true" type="overlaid" top="0" left="0" right="0" bottom="20" >	
-			<mx:horizontalAxis>
-				<mx:CategoryAxis id="cac" categoryField="label" />
-			</mx:horizontalAxis>
-			<mx:horizontalAxisRenderers>
-				<mx:AxisRenderer axis="{cac}" />
-			</mx:horizontalAxisRenderers>
-			<mx:series>
-				<mx:ColumnSeries id="seriesVisits" yField="nb_visits" styleName="columnSerie1" displayName="{resourceManager.getString('piwik', 'General_ColumnNbVisits')}" showDataEffect="{interpolateIn}" />
-				<mx:ColumnSeries id="seriesBounce" yField="bounce_count" styleName="columnSerie2" displayName="{resourceManager.getString('piwik', 'General_ColumnBounceRate')}" showDataEffect="{interpolateIn}" />
-			</mx:series>
-		</mx:ColumnChart>
-		<mx:Legend horizontalCenter="0" bottom="0" dataProvider="{serverChart}" direction="horizontal" />
+	<s:Group id="chart" includeIn="chart" width="100%" height="100%">
+		
 	</s:Group>
 	
-	<s:VGroup id="tab" width="100%" height="100%" includeIn="viewTablet, viewPortrait" creationComplete="list.dataProvider=result" >
-		<s:SkinnableContainer id="legend" width="100%" minHeight="40" fontSize="20" >
-			<s:Label text="{resourceManager.getString('piwik', 'VisitTime_ColumnServerTime')}" left="2" top="15" />
-			<s:Label text="{resourceManager.getString('piwik', 'General_ColumnNbVisits')}" right="2" top="15" />
+	<s:VGroup id="tab" includeIn="tab" width="100%" height="100%">
+		<s:SkinnableContainer id="legend" width="100%" minHeight="40">
+			<s:Label left="2" top="15"
+					 text="{resourceManager.getString('piwik', 'VisitTime_ColumnServerTime')}"/>
+			<s:Label right="2" top="15"
+					 text="{resourceManager.getString('piwik', 'General_ColumnNbVisits')}"/>
 		</s:SkinnableContainer>
 		
-		<s:List id="list" width="100%" height="100%">
-			<s:itemRenderer>
-				<fx:Component>
-					<s:ItemRenderer width="100%" height="40" >
-						<fx:Script>
-							<![CDATA[
-								
-								override public function set data(value:Object):void{
-									if(value!=null){
-										super.data = value;
-										
-										title.text = data.label;
-										visits.text = data.nb_visits;
-									}
-								}
-							]]>
-						</fx:Script>
-						
-						<s:Label id="title" left="2" />
-						<s:Label id="visits" right="2" />
-						
-					</s:ItemRenderer>
-				</fx:Component>
-			</s:itemRenderer>
-		</s:List>
+		<s:List id="list" width="100%" height="100%" itemRenderer="views.renderers.ListRenderer" />
 	</s:VGroup>
 	
 </s:View>

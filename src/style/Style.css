@@ -14,30 +14,28 @@
 
 s|Application
 {
-	background-color:#f9f9f9;
+	background-color:#FFFFFF;
 	color:black;
-	fontSize:18;
+	fontSize:16;
 }
 s|ActionBar{
-	chromeColor: #f9f9f9;
 	skinClass: ClassReference("skin.ActionBarSkin");
+	chromeColor: #f9f9f9;
 }
 s|ActionBar #titleDisplay{
-	fontSize: 24;
+	fontSize: 20;
 	color: #898989;
 	textAlign:center;
 }
-s|ActionBar s|Group#navigationGroup #dashboardBackButton{
-	fontSize: 20;
+s|ActionBar s|Group#navigationContent{
+	backgroundColor: #FFFFFF;
 }
-s|ActionBar s|Group#navigationGroup #reportsButton{
-	fontSize: 20;
-}
+
 #dateRangeViewNav s|ActionBar{
 	textShadowAlpha: 0;
 }
 #dateRangeViewNav s|ActionBar #titleDisplay{
-	fontSize: 24;
+	fontSize: 20;
 	color:#898989;
 }
 @media (os-platform: "IOS"){
@@ -47,11 +45,14 @@ s|ActionBar s|Group#navigationGroup #reportsButton{
 	s|ActionBar.beveled s|Group#navigationGroup #reportsButton{
 		skinClass: ClassReference("spark.skins.mobile.BeveledActionButtonSkin");
 	}
-	s|ActionBar.beveled s|Group#navigationGroup .buttonInfo{
+	s|ActionBar.beveled s|Group#navigationGroup #buttonInfo{
 		skinClass: ClassReference("spark.skins.mobile.BeveledActionButtonSkin");
 	}
 }
 @media (os-platform:"Android"){
+	
+}
+@media (os-platform:"QNX"){
 	
 }
 s|ViewNavigator
@@ -59,6 +60,10 @@ s|ViewNavigator
 	/* background-color:#f9f9f9;
 	color:black;
 	fontSize:18; */
+	backgroundColor: #FFFFFF;
+}
+s|SplitViewNavigator{
+	backgroundColor: #CCCCCC;
 }
 
 
@@ -67,8 +72,6 @@ s|List
 	contentBackgroundColor:#F9F9F9;
 	color:#898989;
 	borderColor:#DADADC;
-	borderAlpha:0.5;
-	fontSize:20;
 	alternatingItemColors:#FFFFFF,#FEFEFE;
 }
 s|LabelItemRenderer
@@ -79,11 +82,11 @@ s|LabelItemRenderer
 s|IconItemRenderer
 {
 	messageStyleName: styleMessage;
-	font-size:20;
+	font-size:16;
 }
 .styleMessage
 {
-	font-size:16;
+	font-size:12;
 	color:#FF9E00;
 }
 
@@ -100,7 +103,7 @@ s|Button
 	font-size:24;
 }
 .actionButton{
-	font-size: 24;
+	font-size: 12;
 	color:#898989;
 	textShadowAlpha:0;
 }
@@ -145,8 +148,9 @@ s|RadioButton
 	color:#FF9E00;
 }
 
-.title{
-	fontSize: 20;
+#titleView{
+	fontSize: 18;
+	textAlign: center;
 }
 
 .legend{

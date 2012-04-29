@@ -5,12 +5,12 @@
 	Link http://www.desktop-web-analytics.com
 	Link https://github.com/DesktopWebAnalytics
 	Licence http://www.gnu.org/licenses/gpl-3.0-standalone.html GPL v3 or later
-
-	$Id: Outlinks.mxml 237 2011-12-15 15:25:06Z benoit $
 -->
-<s:View xmlns:fx="http://ns.adobe.com/mxml/2009" 
-				 xmlns:s="library://ns.adobe.com/flex/spark"
-				 viewActivate="initView()" currentState="loading" actionBarVisible="false" xmlns:views="views.*" xmlns:states="views.states.*">
+<s:View xmlns:fx="http://ns.adobe.com/mxml/2009"
+		xmlns:s="library://ns.adobe.com/flex/spark"
+		xmlns:views="views.*"
+		xmlns:states="views.states.*"
+		actionBarVisible="false" currentState="loading" viewActivate="initView()">
 	<fx:Script>
 		<![CDATA[
 			import com.dwa.common.profile.Profile;
@@ -18,9 +18,6 @@
 			
 			import mx.collections.XMLListCollection;
 			import mx.core.FlexGlobals;
-			
-			import spark.collections.Sort;
-			import spark.collections.SortField;
 			
 			private var profile:Profile;
 			
@@ -57,10 +54,6 @@
 				trace("outlinks");
 				currentState = "tab";
 				
-				result.sort = new Sort();
-				result.sort.fields = [new SortField("nb_visits", true, true)];
-				result.refresh();
-				
 				list.dataProvider = result;
 			}
 		]]>
@@ -68,57 +61,36 @@
 	<fx:Declarations>
 		<!-- Placer ici les éléments non visuels (services et objets de valeur, par exemple). -->
 		
-		<s:DateTimeFormatter id="dateTimeFormatter" locale="{resourceManager.getString('piwik', 'General_Locale')}" timeStyle="none" />
+		<s:DateTimeFormatter id="dateTimeFormatter"
+							 locale="{resourceManager.getString('piwik', 'General_Locale')}"
+							 timeStyle="none"/>
 	</fx:Declarations>
 	
 	<s:states>
-		<s:State name="loading" />
-		<s:State name="tab" />
-		<s:State name="error" />
+		<s:State name="loading"/>
+		<s:State name="tab"/>
+		<s:State name="error"/>
 	</s:states>
 	
 	<s:layout>
-		<s:VerticalLayout paddingTop="10" paddingLeft="5" paddingRight="5" paddingBottom="5" />
+		<s:VerticalLayout paddingBottom="5" paddingLeft="5" paddingRight="5" paddingTop="10"/>
 	</s:layout>
 	
-	<s:Label id="titleView" width="100%" fontSize="20" textAlign="center" />
+	<s:Label id="titleView" width="100%"/>
 	
-	<states:Loader width="100%" height="100%" includeIn="loading" />
+	<states:Loader includeIn="loading" width="100%" height="100%"/>
 	
-	<states:Error id="errorState" width="100%" height="100%" includeIn="error" />
+	<states:Error id="errorState" includeIn="error" width="100%" height="100%"/>
 	
-	<s:VGroup width="100%" height="100%" includeIn="tab">
-		<s:SkinnableContainer id="legend" width="100%" height="40" fontSize="20">
-			<s:Label text="{resourceManager.getString('piwik', 'Actions_ColumnClickedURL')}" top="10" left="2" />
-			<s:Label text="{resourceManager.getString('piwik', 'Actions_ColumnClicks')}" top="10" right="{legend.width/4+2}" />
-			<s:Label text="{resourceManager.getString('piwik', 'Actions_ColumnUniqueClicks')}" top="10" right="2" />
+	<s:VGroup includeIn="tab" width="100%" height="100%">
+		<s:SkinnableContainer id="legend" width="100%" height="40">
+			<s:Label left="2" top="10"
+					 text="{resourceManager.getString('piwik', 'Actions_ColumnClickedURL')}"/>
+			<s:Label right="2" top="10"
+					 text="{resourceManager.getString('piwik', 'Actions_ColumnClicks')}"/>
 		</s:SkinnableContainer>
 		
-		<s:List id="list" width="100%" height="100%" left="2" right="2">
-			<s:itemRenderer>
-				<fx:Component>
-					<s:ItemRenderer width="100%" height="40" dataChange="dataChange()" clipAndEnableScrolling="true">
-						<fx:Script>
-							<![CDATA[
-								
-								private function dataChange():void{
-									if(data==null) return;
-									
-									lab.text = data.label;
-									nb_hits.text = data.nb_hits;
-									uniq_visits.text = data.nb_visits;
-								}
-							]]>
-						</fx:Script>
-						
-						<s:Label id="lab" top="10" left="2" right="{this.width/2}" maxDisplayedLines="1" lineBreak="explicit" />
-						<s:Label id="nb_hits" top="10" right="{this.width/4+2}" />
-						<s:Label id="uniq_visits" top="10" right="7" />
-						
-					</s:ItemRenderer>
-				</fx:Component>
-			</s:itemRenderer>
-		</s:List>
+		<s:List id="list" width="100%" height="100%" itemRenderer="views.renderers.ListRenderer"/>
 	</s:VGroup>
 	
 </s:View>

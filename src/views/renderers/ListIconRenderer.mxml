@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:ItemRenderer xmlns:fx="http://ns.adobe.com/mxml/2009" 
+					xmlns:s="library://ns.adobe.com/flex/spark" 
+					width="100%" height="40" initialize="itemrenderer1_initializeHandler(event)">
+	<fx:Script>
+		<![CDATA[
+			import com.dwa.common.icons.LoadIcons;
+			
+			import mx.core.FlexGlobals;
+			import mx.events.FlexEvent;
+			
+			import spark.core.ContentCache;
+			
+			private var loaderIcon:LoadIcons;
+			
+			private var path:String = FlexGlobals.topLevelApplication.selectedProfile.websitePiwikAccess;
+			
+			static private const iconCache:ContentCache = new ContentCache();
+			
+			protected function itemrenderer1_initializeHandler(event:FlexEvent):void
+			{
+				logo.contentLoader = iconCache;
+			}
+			override public function set data(value:Object):void{
+				super.data = value;
+				if(data == null) return;
+				
+				loaderIcon = new LoadIcons();
+				loaderIcon.addEventListener(Event.COMPLETE, onCache);
+				loaderIcon.addEventListener(ErrorEvent.ERROR, errorCache);
+				loaderIcon.cache(path + data.logo);
+				
+				lab.text = data.label;
+				visits.text = data.nb_visits;
+			}
+			private function onCache(event:Event):void{
+				logo.source = loaderIcon.path;
+				
+				clear();
+			}
+			private function errorCache(event:ErrorEvent):void{
+				clear();
+			}
+			private function clear():void{
+				loaderIcon.removeEventListener(Event.COMPLETE, onCache);
+				loaderIcon.removeEventListener(ErrorEvent.ERROR, errorCache);
+				loaderIcon = null;
+			}
+		]]>
+	</fx:Script>
+	
+	<s:BitmapImage id="logo" left="2" verticalCenter="0"/>
+	<s:Label id="lab" left="22" verticalCenter="0"/>
+	<s:Label id="visits" right="7" verticalCenter="0"/>
+	
+</s:ItemRenderer>

@@ -5,12 +5,13 @@
 	Link http://www.desktop-web-analytics.com
 	Link https://github.com/DesktopWebAnalytics
 	Licence http://www.gnu.org/licenses/gpl-3.0-standalone.html GPL v3 or later
-
-	$Id: Visits.mxml 237 2011-12-15 15:25:06Z benoit $
 -->
-<s:View xmlns:fx="http://ns.adobe.com/mxml/2009" 
-				xmlns:s="library://ns.adobe.com/flex/spark"
-				viewActivate="initView()" currentState="loading" actionBarVisible="false" xmlns:mx="library://ns.adobe.com/flex/mx" xmlns:views="views.*" xmlns:states="views.states.*" >
+<s:View xmlns:fx="http://ns.adobe.com/mxml/2009"
+		xmlns:s="library://ns.adobe.com/flex/spark"
+		xmlns:mx="library://ns.adobe.com/flex/mx"
+		xmlns:views="views.*"
+		xmlns:states="views.states.*"
+		actionBarVisible="false" currentState="loading" viewActivate="initView()">
 	<fx:Script>
 		<![CDATA[
 			import com.dwa.common.profile.Profile;
@@ -18,9 +19,6 @@
 			
 			import mx.collections.XMLListCollection;
 			import mx.core.FlexGlobals;
-			import mx.events.FlexEvent;
-			
-			import spark.events.ViewNavigatorEvent;
 			
 			private var report:Reports;
 			private var report2:Reports;
@@ -104,11 +102,6 @@
 				actions.text = resourceManager.getString('piwik', 'VisitsSummary_NbActionsPerVisit').replace('%s', result2.nb_actions_per_visit);
 				duration.text = resourceManager.getString('piwik', 'VisitsSummary_AverageVisitDuration').replace('%s', getTime(result2.avg_time_on_site));
 				
-				ca.categoryField = "@date";
-				lineseries.yField = "nb_visits";
-				visitsChart.dataProvider = result;
-			
-				//infos.removeElement(loading);
 			}
 			
 			private function getTime(val:String):String{
@@ -143,71 +136,42 @@
 	</fx:Script>
 	<fx:Declarations>
 		<!-- Placer ici les éléments non visuels (services et objets de valeur, par exemple). -->
-		<mx:SeriesInterpolate id="interpolateIn" duration="1000" />
 		
-		<s:DateTimeFormatter id="dateTimeFormatter" locale="{resourceManager.getString('piwik', 'General_Locale')}" timeStyle="none" />
-		<s:DateTimeFormatter id="shortDateFormatter" locale="{resourceManager.getString('piwik', 'General_Locale')}" timeStyle="none" dateStyle="short" />
+		<s:DateTimeFormatter id="dateTimeFormatter"
+							 locale="{resourceManager.getString('piwik', 'General_Locale')}"
+							 timeStyle="none"/>
+		<s:DateTimeFormatter id="shortDateFormatter" dateStyle="short"
+							 locale="{resourceManager.getString('piwik', 'General_Locale')}"
+							 timeStyle="none"/>
 	</fx:Declarations>
 	
 	<s:states>
-		<s:State name="loading" />
-		<s:State name="chart" />
-		<s:State name="tab" />
-		<s:State name="error" />
+		<s:State name="loading"/>
+		<s:State name="chart"/>
+		<s:State name="tab"/>
+		<s:State name="error"/>
 	</s:states>
 	
 	<s:layout>
-		<s:VerticalLayout paddingTop="10" paddingLeft="5" paddingRight="5" paddingBottom="5" />
+		<s:VerticalLayout paddingBottom="5" paddingLeft="5" paddingRight="5" paddingTop="10"/>
 	</s:layout>
 	
-	<s:Label id="titleView" width="100%" fontSize="20" textAlign="center" />
+	<s:Label id="titleView" width="100%"/>
 	
-	<states:Loader width="100%" height="100%" includeIn="loading" />
+	<states:Loader includeIn="loading" width="100%" height="100%"/>
 	
-	<states:Error id="errorState" width="100%" height="100%" includeIn="error" />
+	<states:Error id="errorState" includeIn="error" width="100%" height="100%"/>
 	
-	<s:Scroller width="100%" height="100%" includeIn="chart">
-		<s:Group width="100%" height="100%" >
-			<s:VGroup width="100%" height="100%">
-				<mx:AreaChart id="visitsChart" showDataTips="true" width="100%" minHeight="150" height="100%">
-					<mx:backgroundElements>
-						<mx:GridLines gridDirection="both" />
-					</mx:backgroundElements>
-					<mx:horizontalAxis>
-						<mx:CategoryAxis id="ca" ticksBetweenLabels="false" />
-					</mx:horizontalAxis>
-					<mx:series>
-						<mx:AreaSeries id="lineseries" displayName="{resourceManager.getString('piwik', 'General_ColumnNbVisits')}" form="curve" showDataEffect="{interpolateIn}">
-							<mx:areaFill>
-								<s:LinearGradient rotation="90">
-									<s:entries>
-										<s:GradientEntry color="#FF9E00" alpha=".8" />
-										<s:GradientEntry color="#FF7D01" alpha=".8" />
-									</s:entries>
-								</s:LinearGradient>
-								
-							</mx:areaFill>
-						</mx:AreaSeries>
-					</mx:series>
-					<mx:horizontalAxisRenderers>
-						<mx:AxisRenderer axis="{ca}" showLabels="false"  />
-					</mx:horizontalAxisRenderers>
-					<mx:seriesFilters>
-						<fx:Array />
-					</mx:seriesFilters>
-				</mx:AreaChart>
-				
-				<s:VGroup id="infos" width="100%">
-					<s:Label id="nbVisits" width="100%" />
-					<s:Label id="nbActions" width="100%" />
-					<s:Label id="actions" width="100%" />
-					
-					<s:Label id="duration" width="100%" />
-					<s:Label id="bounceRate" width="100%" />
-					<s:Label id="maxActions" width="100%" />
-				</s:VGroup>
-			</s:VGroup>
-		</s:Group>
-	</s:Scroller>
+	<s:Group includeIn="chart" width="100%" height="100%">
+		<s:VGroup width="100%" height="100%">
+			<s:Label id="nbVisits" width="100%"/>
+			<s:Label id="nbActions" width="100%"/>
+			<s:Label id="actions" width="100%"/>
+			
+			<s:Label id="duration" width="100%"/>
+			<s:Label id="bounceRate" width="100%"/>
+			<s:Label id="maxActions" width="100%"/>
+		</s:VGroup>
+	</s:Group>
 	
 </s:View>
