@@ -1,0 +1,177 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+	DWA_Mobile
+
+	Link http://www.desktop-web-analytics.com
+	Link https://github.com/DesktopWebAnalytics
+	Licence http://www.gnu.org/licenses/gpl-3.0-standalone.html GPL v3 or later
+-->
+<s:View xmlns:fx="http://ns.adobe.com/mxml/2009" 
+		xmlns:s="library://ns.adobe.com/flex/spark"
+		viewActivate="dashboardViewActivate(event)" xmlns:states="views.states.*" currentState="loading" destructionPolicy="never">
+	<fx:Script>
+		<![CDATA[
+			import com.dwa.common.profile.Profile;
+			
+			import mx.core.FlexGlobals;
+			import mx.events.FlexEvent;
+			
+			import spark.events.ViewNavigatorEvent;
+			import spark.formatters.DateTimeFormatter;
+			import spark.transitions.CrossFadeViewTransition;
+			
+			private const DAY:int = 86400000;
+			
+			protected function dashboardViewActivate(event:ViewNavigatorEvent):void
+			{
+				trace("view dashboard phone");
+				
+				
+				var selectedWebsite:Profile = data as Profile;
+				title = selectedWebsite.websiteName;
+				
+				var formatDate:DateTimeFormatter = new DateTimeFormatter();
+				formatDate.dateTimePattern = "yyyy-MM-dd";
+				formatDate.setStyle("locale", "en_US");
+				
+				var start:Date = new Date();
+				var end:Date = new Date();
+				
+				if(!selectedWebsite.websiteDay) end.time = end.time - DAY;
+				start.time = end.time - (DAY * (selectedWebsite.websitePeriod-1));
+				
+				var startDate:String = formatDate.format(start);
+				var endDate:String = formatDate.format(end);
+				
+				// store selected website
+				FlexGlobals.topLevelApplication.selectedProfile = selectedWebsite;
+				
+				// store selected dates
+				FlexGlobals.topLevelApplication.selectedPeriodDate = startDate + ',' + endDate;
+				FlexGlobals.topLevelApplication.selectedStartDate = start;
+				FlexGlobals.topLevelApplication.selectedEndDate = end;
+				
+				currentState = "phone";
+			}
+			private function delWebsite():void{
+				phoneNavigator.pushView(Del, data);
+			}
+			private function editWebsite():void{
+				phoneNavigator.pushView(Edit, data);
+			}
+			
+			/* protected function view1_keyDownHandler(event:KeyboardEvent):void{
+				if(event.keyCode == Keyboard.BACK){
+					event.preventDefault();
+				}
+			} */
+			private function popView():void{
+				backButton();
+			}
+			private function backButton():void{
+				if(phoneNavigator.length > 1){
+					phoneNavigator.popView();
+					trace("key BACK phone full");
+				}else{
+					navigator.popView();
+					trace("key BACK phone nav");
+				}
+			}
+			
+			protected function saveDateRange(event:MouseEvent):void
+			{
+				var dr:DateRange = dateRangeViewNav.activeView as DateRange;
+				
+				var startDate:Date = dr.fromDate.selectedDate;
+				var endDate:Date = dr.toDate.selectedDate;
+				
+				FlexGlobals.topLevelApplication.selectedStartDate = startDate;
+				FlexGlobals.topLevelApplication.selectedEndDate = endDate;
+				
+				FlexGlobals.topLevelApplication.selectedPeriodDate = formatApiDate.format(startDate)+','+formatApiDate.format(endDate);
+				
+				menuDateCallout.closeDropDown();
+				
+				var view:Class = FlexGlobals.topLevelApplication.currentView.view;
+				var dataView:String = FlexGlobals.topLevelApplication.currentView.label;
+				
+				if(phoneNavigator.activeView is ListReports){
+					
+				}else{
+					phoneNavigator.replaceView(view, dataView);
+				}
+				
+			}
+			
+		]]>
+	</fx:Script>
+	<fx:Declarations>
+		<!-- Placer ici les éléments non visuels (services et objets de valeur, par exemple). -->
+		
+		<s:DateTimeFormatter id="formatApiDate" dateTimePattern="yyyy-MM-dd" locale="en_US" />
+	</fx:Declarations>
+	<s:navigationContent>
+		<s:Button id="dashboardBackButton" styleName="actionButton" label="{resourceManager.getString('piwik', 'Mobile_NavigationBack')}" visible="{FlexGlobals.topLevelApplication.showBackButton}" click="popView()" />
+	</s:navigationContent>
+	
+	<s:navigationLayout>
+		<s:HorizontalLayout verticalAlign="middle" gap="5" />
+	</s:navigationLayout>
+	
+	<s:actionContent>
+		<s:CalloutButton id="menuMoreCallout" verticalPosition="after" calloutDestructionPolicy="never">
+			<s:icon>
+				<s:MultiDPIBitmapSource source160dpi="@Embed('assets/icons/low/ic_menu_more.png')"
+										source240dpi="@Embed('assets/icons/med/ic_menu_more.png')"
+										source320dpi="@Embed('assets/icons/high/ic_menu_more.png')" />
+			</s:icon>
+			<s:calloutLayout>
+				<s:HorizontalLayout paddingBottom="10" paddingLeft="10" paddingRight="10" paddingTop="10" gap="10" />
+			</s:calloutLayout>
+			<s:calloutContent>
+				<s:Button styleName="buttonDelete" height="60" label="{resourceManager.getString('piwik', 'General_Delete')}" click="delWebsite()">
+					<s:icon>
+						<s:MultiDPIBitmapSource source160dpi="@Embed('assets/icons/low/ic_menu_delete.png')"
+												source240dpi="@Embed('assets/icons/med/ic_menu_delete.png')"
+												source320dpi="@Embed('assets/icons/high/ic_menu_delete.png')" />
+					</s:icon>
+				</s:Button>
+				<s:Button styleName="buttonEdit" height="60" label="{resourceManager.getString('piwik', 'General_Edit')}" click="editWebsite()">
+					<s:icon>
+						<s:MultiDPIBitmapSource source160dpi="@Embed('assets/icons/low/ic_menu_edit.png')"
+												source240dpi="@Embed('assets/icons/med/ic_menu_edit.png')"
+												source320dpi="@Embed('assets/icons/high/ic_menu_edit.png')" />
+					</s:icon>
+				</s:Button>
+			</s:calloutContent>
+		</s:CalloutButton>
+		<s:CalloutButton id="menuDateCallout" verticalPosition="after" calloutDestructionPolicy="never" open="(dateRangeViewNav.activeView as DateRange).setView()" >
+			<s:icon>
+				<s:MultiDPIBitmapSource source160dpi="@Embed('assets/icons/low/ic_menu_month.png')"
+										source240dpi="@Embed('assets/icons/med/ic_menu_month.png')"
+										source320dpi="@Embed('assets/icons/high/ic_menu_month.png')" />
+			</s:icon>
+			<s:ViewNavigator id="dateRangeViewNav" minWidth="{(FlexGlobals.topLevelApplication.currentState=='portrait')? 210 : 450}" height="100%" firstView="views.DateRange">
+				<s:navigationContent>
+					<s:Button height="40" color="#898989" label="{resourceManager.getString('piwik', 'General_Close')}" click="menuDateCallout.closeDropDown()" />
+				</s:navigationContent>
+				<s:actionContent>
+					<s:Button height="40" label="{resourceManager.getString('piwik', 'General_Ok')}" emphasized="true" click="saveDateRange(event)" />
+				</s:actionContent>
+			</s:ViewNavigator>
+		</s:CalloutButton>
+	</s:actionContent>
+	
+	<s:actionLayout>
+		<s:HorizontalLayout verticalAlign="middle" gap="5" />
+	</s:actionLayout>
+	<s:states>
+		<s:State name="loading" />
+		<s:State name="phone" />
+	</s:states>
+	<states:Loader includeIn="loading" verticalCenter="0" horizontalCenter="0" />
+	
+	<!-- Phones -->
+	<s:ViewNavigator includeIn="phone" id="phoneNavigator" width="100%" height="100%" firstView="{ListReports}" />
+	
+</s:View>

@@ -40,6 +40,7 @@
 			
 			private function initView():void{
 				trace("Liste reports");
+				reportsList.dataProvider = reports;
 				
 				if(FlexGlobals.topLevelApplication.isTablet) {
 					reportsList.selectedIndex = 1;
@@ -53,88 +54,9 @@
 				var report:Object = reportsList.selectedItem;
 				var goToView:Class;
 				
-				/* switch(report.id){
-					case 'visits':
-						goToView = Visits;
-						break;
+				// test if it's an heaader
+				if(report.id == "header") return;
 					
-					case 'visitsLocalTime':
-						goToView = VisitsPerLocalTime;
-						break;
-					
-					case 'visitsServerTime':
-						goToView = VisitsPerServerTime;
-						break;
-					
-					case 'configuration':
-						goToView = Configurations;
-						break;
-					
-					case 'browserFamilies':
-						goToView = BrowserFamilies;
-						break;
-					
-					case 'browsers':
-						goToView = Browsers;
-						break;
-					
-					case 'os':
-						goToView = OperatingSystems;
-						break;
-					
-					case 'resolutions':
-						goToView = Resolutions;
-						break;
-					
-					case 'wideScreen':
-						goToView = WideScreen;
-						break;
-					
-					case 'plugins':
-						goToView = Plugins;
-						break;
-					
-					case 'locations':
-						goToView = Locations;
-						break;
-					
-					case 'providers':
-						goToView = Providers;
-						break;
-					
-					case 'pageUrls':
-						goToView = Pages;
-						break;
-					
-					case 'pageTitles':
-						goToView = PageTitles;
-						break;
-					
-					case 'outlinks':
-						goToView = Outlinks;
-						break;
-					
-					case 'downloads':
-						goToView = Downloads;
-						break;
-					
-					case 'searchEngines':
-						goToView = SearchEngines;
-						break;
-					
-					case 'keywords':
-						goToView = Keywords;
-						break;
-					
-					case 'websites':
-						goToView = Websites;
-						break;
-					
-					case 'campaigns':
-						goToView = Campaigns;
-						break;
-				} */
-				
 				goToView = report.view;
 				
 				FlexGlobals.topLevelApplication.currentView = report;
@@ -274,11 +196,5 @@
 		</s:ArrayList>
 	</fx:Declarations>
 	
-	<s:layout>
-		<s:VerticalLayout paddingTop="1" />
-	</s:layout>
-	
-	<s:List id="reportsList" width="100%" height="100%" dataProvider="{reports}" itemRenderer="views.renderers.ReportsItemRenderer" change="selectReport()">
-		
-	</s:List>
+	<s:List id="reportsList" width="100%" height="100%" itemRenderer="views.renderers.ReportsItemRenderer" change="selectReport()" />
 </s:View>

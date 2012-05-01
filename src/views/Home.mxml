@@ -8,50 +8,32 @@
 -->
 <s:View xmlns:fx="http://ns.adobe.com/mxml/2009" 
 				 xmlns:s="library://ns.adobe.com/flex/spark"
-				 title="{resourceManager.getString('piwik', 'SitesManager_MenuSites')}"
 				 viewActivate="initView()" destructionPolicy="never">
 	<fx:Script>
 		<![CDATA[
-			import com.dwa.common.profile.Profile;
-			
 			import mx.collections.ArrayList;
 			import mx.core.FlexGlobals;
 			
-			import spark.formatters.DateTimeFormatter;
-			
-			private const DAY:int = 86400000;
+			private var isTablet:Boolean;
 			
 			private function initView():void{
 				trace("view home");
+				title = resourceManager.getString('piwik', 'SitesManager_MenuSites');
 				//if(FlexGlobals.topLevelApplication.isTablet && !FlexGlobals.topLevelApplication.showBackButton) this.stage.displayState = StageDisplayState.NORMAL;
+				
+				isTablet = FlexGlobals.topLevelApplication.isTablet;
 				
 				websitesList.dataProvider = new ArrayList(data as Array);
 			}
 			private function selectWebsite():void{
-				var selectedWebsite:Profile = websitesList.selectedItem;
+				trace("select website");
 				
-				var formatDate:DateTimeFormatter = new DateTimeFormatter();
-				formatDate.dateTimePattern = "yyyy-MM-dd";
-				formatDate.setStyle("locale", "en_US");
-				
-				var start:Date = new Date();
-				var end:Date = new Date();
-				
-				if(!selectedWebsite.websiteDay) end.time = end.time - DAY;
-				start.time = end.time - (DAY * (selectedWebsite.websitePeriod-1));
-				
-				var startDate:String = formatDate.format(start);
-				var endDate:String = formatDate.format(end);
-				
-				// save selected website
-				FlexGlobals.topLevelApplication.selectedProfile = selectedWebsite;
-				
-				// save selected dates
-				FlexGlobals.topLevelApplication.selectedPeriodDate = startDate + ',' + endDate;
-				FlexGlobals.topLevelApplication.selectedStartDate = start;
-				FlexGlobals.topLevelApplication.selectedEndDate = end;
-				
-				navigator.pushView(Dashboard);
+				//navigator.pushView(Dashboard, websitesList.selectedItem);
+				if(isTablet){
+					navigator.pushView(DashboardTablet, websitesList.selectedItem);
+				}else{
+					navigator.pushView(DashboardPhone, websitesList.selectedItem);
+				}
 			}
 			
 			private function addWebsite():void{
@@ -89,7 +71,5 @@
 		</s:Button>
 	</s:actionContent>
 	
-	<s:List id="websitesList" width="100%" height="100%" horizontalScrollPolicy="off" itemRenderer="views.renderers.ProfileRenderer" change="selectWebsite()">
-		
-	</s:List>
+	<s:List id="websitesList" width="100%" height="100%" horizontalScrollPolicy="off" itemRenderer="views.renderers.ProfileRenderer" change="selectWebsite()" />
 </s:View>

@@ -34,6 +34,8 @@
 			import spark.transitions.CrossFadeViewTransition;
 			
 			import views.Dashboard;
+			import views.DashboardPhone;
+			import views.DashboardTablet;
 			import views.Home;
 			
 			private var checkDB:DataBase;
@@ -201,7 +203,7 @@
 					trace('VN: ' + viewNavigator.length);
 					
 					if(viewNavigator.length > 1){
-						if(viewNavigator.activeView is Dashboard){
+						/* if(viewNavigator.activeView is Dashboard){
 							var activeView:Dashboard = viewNavigator.activeView as Dashboard;
 							
 							if(isTablet){
@@ -221,6 +223,22 @@
 								}
 							}
 							
+						} */
+						if(viewNavigator.activeView is DashboardTablet){
+							var splitVN:SplitViewNavigator = (viewNavigator.activeView as DashboardTablet).splitViewNavigator as SplitViewNavigator;
+							
+							if(splitVN.viewNavigatorPopUp.isOpen){
+								splitVN.hideViewNavigatorPopUp();
+							}else{
+								viewNavigator.popView();
+							}
+						}else if(viewNavigator.activeView is DashboardPhone){
+							var phoneNav:ViewNavigator = (viewNavigator.activeView as DashboardPhone).phoneNavigator as ViewNavigator;
+							if(phoneNav.length > 1){
+								phoneNav.popView();
+							}else{
+								viewNavigator.popView();
+							}
 						}else{
 							viewNavigator.popView();
 						}
