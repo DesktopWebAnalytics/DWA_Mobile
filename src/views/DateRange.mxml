@@ -7,17 +7,21 @@
 	Licence http://www.gnu.org/licenses/gpl-3.0-standalone.html GPL v3 or later
 -->
 <s:View xmlns:fx="http://ns.adobe.com/mxml/2009" 
-		xmlns:s="library://ns.adobe.com/flex/spark" title="{resourceManager.getString('piwik', 'General_DateRangeInPeriodList')}"
-		viewActivate="view1_viewActivateHandler(event)">
+		xmlns:s="library://ns.adobe.com/flex/spark"
+		viewActivate="view1_viewActivateHandler(event)" xmlns:states="views.states.*" currentState="loading" destructionPolicy="never">
 	<fx:Script>
 		<![CDATA[
 			import mx.core.FlexGlobals;
 			
 			import spark.events.ViewNavigatorEvent;
 			
+			private const BEGIN:Date = new Date('2008', '00', '01');
+			private const TODAY:Date = new Date();
+			
 			protected function view1_viewActivateHandler(event:ViewNavigatorEvent):void
 			{
-				
+				currentState = 'dates';
+				setView();
 			}
 			public function setView():void{
 				fromDate.selectedDate = FlexGlobals.topLevelApplication.selectedStartDate;
@@ -30,21 +34,19 @@
 		<!-- Placer ici les éléments non visuels (services et objets de valeur, par exemple). -->
 	</fx:Declarations>
 	<s:states>
-		<s:State name="portrait" />
-		<s:State name="landscape" />
+		<s:State name="loading" />
+		<s:State name="dates" />
 	</s:states>
-	<s:Scroller width="100%" height="100%">
-		<s:VGroup width="100%" height="100%" paddingBottom="5" paddingLeft="5" paddingRight="5" paddingTop="5" gap="5" horizontalAlign="center">
-			<s:Group>
-				<s:layout.portrait>
-					<s:VerticalLayout />
-				</s:layout.portrait>
-				<s:layout.landscape>
-					<s:HorizontalLayout />
-				</s:layout.landscape>
-				<s:DateSpinner id="fromDate" height="150" displayMode="date" minDate="{new Date('2008', '00', '01')}" maxDate="{new Date}" />
-				<s:DateSpinner id="toDate" height="150" displayMode="date" minDate="{new Date('2008', '00', '01')}" maxDate="{new Date}" />
-			</s:Group>
-		</s:VGroup>
-	</s:Scroller>
+	
+	<states:Loader includeIn="loading" verticalCenter="0" horizontalCenter="0" />
+	
+	<!--<s:Scroller includeIn="dates" width="100%" height="100%">-->
+		<s:Group includeIn="dates" width="100%" height="100%" >
+			<s:layout>
+				<s:TileLayout columnWidth="200" rowHeight="150" paddingBottom="5" paddingLeft="5" paddingRight="5" paddingTop="5" />
+			</s:layout>
+			<s:DateSpinner id="fromDate" width="200" height="150" displayMode="date" minDate="{BEGIN}" maxDate="{TODAY}" />
+			<s:DateSpinner id="toDate" width="200" height="150" displayMode="date" minDate="{BEGIN}" maxDate="{TODAY}" />
+		</s:Group>
+	<!--</s:Scroller>-->
 </s:View>

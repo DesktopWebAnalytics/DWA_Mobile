@@ -10,7 +10,7 @@
 @namespace s "library://ns.adobe.com/flex/spark";
 @namespace components "spark.components.*";
 @namespace mobile "spark.skins.mobile.*";
-@namespace mx "library://ns.adobe.com/flex/mx";
+@namespace components1 "skin.components.*";
 
 s|Application
 {
@@ -37,6 +37,9 @@ s|ActionBar s|Group#navigationContent{
 #dateRangeViewNav s|ActionBar #titleDisplay{
 	fontSize: 20;
 	color:#898989;
+}
+#reportsButton{
+	contentBackgroundAppearance: flat;
 }
 @media (os-platform: "IOS"){
 	s|ActionBar{
@@ -157,10 +160,18 @@ s|RadioButton
 	fontSize:14;
 	
 }
+
+.number{
+	fontSize: 40;
+	color: #FFFFFF;
+}
+components1|ShowNumber{
+	color: #5E3C0F;
+}
 /* mx|LineChart{
 fontSize: 14;
 } */
-mx|AreaChart{
+/*mx|AreaChart{
 	fontSize: 14;
 }
 mx|PieChart{
@@ -183,4 +194,4 @@ mx|ColumnChart{
 }
 mx|Legend{
 	fontSize: 22;
-}
+}*/

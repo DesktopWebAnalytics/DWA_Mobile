@@ -33,7 +33,6 @@
 			import spark.components.SplitViewNavigator;
 			import spark.transitions.CrossFadeViewTransition;
 			
-			import views.Dashboard;
 			import views.DashboardPhone;
 			import views.DashboardTablet;
 			import views.Home;
@@ -170,7 +169,7 @@
 				//NativeApplication.nativeApplication.addEventListener(InvokeEvent.INVOKE, invoke);
 				
 				if(Capabilities.isDebugger) {
-					//changeLocale("en_US");
+					//changeLocale("it_IT");
 				}
 			}
 			protected function application1_initializeHandler(event:FlexEvent):void
@@ -203,27 +202,6 @@
 					trace('VN: ' + viewNavigator.length);
 					
 					if(viewNavigator.length > 1){
-						/* if(viewNavigator.activeView is Dashboard){
-							var activeView:Dashboard = viewNavigator.activeView as Dashboard;
-							
-							if(isTablet){
-								var splitVN:SplitViewNavigator = activeView.splitViewNavigator as SplitViewNavigator;
-								
-								if(splitVN.viewNavigatorPopUp.isOpen){
-									splitVN.hideViewNavigatorPopUp();
-								}else{
-									viewNavigator.popView();
-								}
-							}else{
-								var phoneNav:ViewNavigator = activeView.phoneNavigator as ViewNavigator;
-								if(phoneNav.length > 1){
-									phoneNav.popView();
-								}else{
-									viewNavigator.popView();
-								}
-							}
-							
-						} */
 						if(viewNavigator.activeView is DashboardTablet){
 							var splitVN:SplitViewNavigator = (viewNavigator.activeView as DashboardTablet).splitViewNavigator as SplitViewNavigator;
 							

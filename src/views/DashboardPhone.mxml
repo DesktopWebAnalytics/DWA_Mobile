@@ -92,14 +92,17 @@
 				
 				menuDateCallout.closeDropDown();
 				
-				var view:Class = FlexGlobals.topLevelApplication.currentView.view;
-				var dataView:String = FlexGlobals.topLevelApplication.currentView.label;
-				
-				if(phoneNavigator.activeView is ListReports){
+				if(FlexGlobals.topLevelApplication.currentView){
+					var view:Class = FlexGlobals.topLevelApplication.currentView.view;
+					var dataView:String = FlexGlobals.topLevelApplication.currentView.label;
 					
-				}else{
-					phoneNavigator.replaceView(view, dataView);
+					if(phoneNavigator.activeView is ListReports){
+						
+					}else{
+						phoneNavigator.replaceView(view, dataView);
+					}
 				}
+				
 				
 			}
 			
@@ -145,18 +148,20 @@
 				</s:Button>
 			</s:calloutContent>
 		</s:CalloutButton>
-		<s:CalloutButton id="menuDateCallout" verticalPosition="after" calloutDestructionPolicy="never" open="(dateRangeViewNav.activeView as DateRange).setView()" >
+		
+		<!-- Menu date range - callout -->
+		<s:CalloutButton id="menuDateCallout" verticalPosition="after" calloutDestructionPolicy="never" close="(dateRangeViewNav.activeView as DateRange).setView()" >
 			<s:icon>
 				<s:MultiDPIBitmapSource source160dpi="@Embed('assets/icons/low/ic_menu_month.png')"
 										source240dpi="@Embed('assets/icons/med/ic_menu_month.png')"
 										source320dpi="@Embed('assets/icons/high/ic_menu_month.png')" />
 			</s:icon>
-			<s:ViewNavigator id="dateRangeViewNav" minWidth="{(FlexGlobals.topLevelApplication.currentState=='portrait')? 210 : 450}" height="100%" firstView="views.DateRange">
+			<s:ViewNavigator id="dateRangeViewNav" width="{(FlexGlobals.topLevelApplication.currentState=='portrait')? 210 : 420}" height="{(FlexGlobals.topLevelApplication.currentState=='portrait')? 370 : 210}" title="{resourceManager.getString('piwik', 'General_DateRangeInPeriodList')}" firstView="views.DateRange">
 				<s:navigationContent>
-					<s:Button height="40" color="#898989" label="{resourceManager.getString('piwik', 'General_Close')}" click="menuDateCallout.closeDropDown()" />
+					<s:Button color="#898989" label="{resourceManager.getString('piwik', 'General_Close')}" click="menuDateCallout.closeDropDown()" />
 				</s:navigationContent>
 				<s:actionContent>
-					<s:Button height="40" label="{resourceManager.getString('piwik', 'General_Ok')}" emphasized="true" click="saveDateRange(event)" />
+					<s:Button label="{resourceManager.getString('piwik', 'General_Ok')}" emphasized="true" click="saveDateRange(event)" />
 				</s:actionContent>
 			</s:ViewNavigator>
 		</s:CalloutButton>
