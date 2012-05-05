@@ -212,13 +212,7 @@
 	</fx:Declarations>
 	
 	<s:navigationContent>
-		<s:Button styleName="buttonBack" visible="{FlexGlobals.topLevelApplication.showBackButton}" click="navigator.popView()">
-			<s:icon>
-				<s:MultiDPIBitmapSource source160dpi="@Embed('assets/icons/low/ic_menu_back.png')"
-										source240dpi="@Embed('assets/icons/med/ic_menu_back.png')"
-										source320dpi="@Embed('assets/icons/high/ic_menu_back.png')" />
-			</s:icon>
-		</s:Button>
+		<s:Button id="backButton" styleName="actionButton" label="{resourceManager.getString('piwik', 'Mobile_NavigationBack')}" visible="{FlexGlobals.topLevelApplication.showBackButton}" click="navigator.popView()" />
 	</s:navigationContent>
 	
 	<s:states>

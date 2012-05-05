@@ -110,6 +110,12 @@ s|Button
 	color:#898989;
 	textShadowAlpha:0;
 }
+.buttonDelete{
+	fontSize: 16;
+}
+.buttonEdit{
+	fontSize: 16;
+}
 s|Callout{
 	contentBackgroundAppearance: none;
 	skinClass:ClassReference("skin.components.CalloutSkin");
