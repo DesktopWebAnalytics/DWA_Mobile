@@ -9,8 +9,8 @@
 <s:Application xmlns:fx="http://ns.adobe.com/mxml/2009" 
 							xmlns:s="library://ns.adobe.com/flex/spark"
 							splashScreenImage="views.AppSplashScreen" splashScreenScaleMode="none" splashScreenMinimumDisplayTime="500"
-							resize="applicationResizingHandler(event)" initialize="application1_initializeHandler(event)"
-							creationComplete="complete(event)"
+							resize="applicationResizingHandler(event)"
+							creationComplete="creationComplete(event)" applicationComplete="applicationComplete()"
 							activate="activate()" deactivate="deactivate()"
 							locale="{resourceManager.getString('piwik', 'General_Locale')}"
 							direction="{languageDirection}"
@@ -70,6 +70,38 @@
 				
 				if(!showBackButton) systemManager.stage.removeEventListener(KeyboardEvent.KEY_DOWN, deviceKeyBackHandler);
 			}
+			protected function creationComplete(event:FlexEvent):void
+			{
+				trace('creation complete');
+				if(Capabilities.version.indexOf("AND")){
+					showBackButton = true;
+				}else{
+					showBackButton = false;
+				}
+				
+				if(!showBackButton) {
+					systemManager.stage.addEventListener(KeyboardEvent.KEY_DOWN, deviceKeyBackHandler);
+					trace('handle back button');
+				}
+				
+				//if(Capabilities.isDebugger) addStats(this);
+				
+				isTablet = height > 960 || width > 960;
+				isSmallScreen = height < 500 || width < 500;
+				
+				
+				
+				//NativeApplication.nativeApplication.addEventListener(InvokeEvent.INVOKE, invoke);
+				
+				if(Capabilities.isDebugger) {
+					//changeLocale("it_IT");
+				}
+			}
+			protected function applicationComplete():void{
+				trace('application complete');
+				
+				checkDataBase();
+			}
 			public function changeLocale(locale:String):void{
 				resourceManager.localeChain = [locale];
 				
@@ -89,6 +121,8 @@
 					trace("--no arguments--");
 				}
 			}
+			
+			// check database and get websites
 			private function checkDataBase():void{
 				checkDB = new DataBase();
 				
@@ -158,37 +192,7 @@
 				trace("show menu");
 			}
 			
-			protected function complete(event:FlexEvent):void
-			{
-				trace('creation complete');
-				isTablet = height > 960 || width > 960;
-				isSmallScreen = height < 500 || width < 500;
-				
-				checkDataBase();
-				
-				//NativeApplication.nativeApplication.addEventListener(InvokeEvent.INVOKE, invoke);
-				
-				if(Capabilities.isDebugger) {
-					//changeLocale("it_IT");
-				}
-			}
-			protected function application1_initializeHandler(event:FlexEvent):void
-			{
-				trace("initialize app");
-				
-				if(Capabilities.version.indexOf("AND")){
-					showBackButton = true;
-				}else{
-					showBackButton = false;
-				}
-				
-				if(!showBackButton) {
-					systemManager.stage.addEventListener(KeyboardEvent.KEY_DOWN, deviceKeyBackHandler);
-					trace('handle back button');
-				}
-				
-				//if(Capabilities.isDebugger) addStats(this);
-			}
+			
 			private function addStats(parent:IVisualElementContainer):void{
 				var comp:UIComponent = new UIComponent();
 				parent.addElement(comp);
@@ -239,6 +243,7 @@
 		]]>
 	</fx:Script>
 	
+	<!-- Set style -->
 	<fx:Style source="style/Style.css" />
 	
 	<fx:Declarations>
@@ -246,14 +251,17 @@
 		
 	</fx:Declarations>
 	
+	<!-- Get Piwik translations -->
 	<fx:Metadata>
 		[ResourceBundle("piwik")]
 	</fx:Metadata>
 	
+	<!-- This states are handled by AIR -->
 	<s:states>
 		<s:State name="portrait" />
 		<s:State name="landscape" />
 	</s:states>
 	
+	<!-- Main navigator -->
 	<s:ViewNavigator id="viewNavigator" width="100%" height="100%" />
 </s:Application>
