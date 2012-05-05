@@ -129,17 +129,17 @@
 										source320dpi="@Embed('assets/icons/high/ic_menu_more.png')" />
 			</s:icon>
 			<s:calloutLayout>
-				<s:HorizontalLayout paddingBottom="10" paddingLeft="10" paddingRight="10" paddingTop="10" gap="10" />
+				<s:HorizontalLayout gap="5" />
 			</s:calloutLayout>
 			<s:calloutContent>
-				<s:Button styleName="buttonDelete" height="60" label="{resourceManager.getString('piwik', 'General_Delete')}" click="delWebsite()">
+				<s:Button styleName="buttonDelete" height="40" label="{resourceManager.getString('piwik', 'General_Delete')}" click="delWebsite()">
 					<s:icon>
 						<s:MultiDPIBitmapSource source160dpi="@Embed('assets/icons/low/ic_menu_delete.png')"
 												source240dpi="@Embed('assets/icons/med/ic_menu_delete.png')"
 												source320dpi="@Embed('assets/icons/high/ic_menu_delete.png')" />
 					</s:icon>
 				</s:Button>
-				<s:Button styleName="buttonEdit" height="60" label="{resourceManager.getString('piwik', 'General_Edit')}" click="editWebsite()">
+				<s:Button styleName="buttonEdit" height="40" label="{resourceManager.getString('piwik', 'General_Edit')}" click="editWebsite()">
 					<s:icon>
 						<s:MultiDPIBitmapSource source160dpi="@Embed('assets/icons/low/ic_menu_edit.png')"
 												source240dpi="@Embed('assets/icons/med/ic_menu_edit.png')"
