@@ -32,7 +32,7 @@
             /**
              *  @private
              */
-            override protected function updateDisplayList(unscaledWidth:Number, unscaledHeight:Number) : void
+            override protected function updateDisplayList(unscaledWidth:ShowNumber, unscaledHeight:ShowNumber) : void
             {
                 // Push backgroundColor and backgroundAlpha directly.
                 // Handle undefined backgroundColor by hiding the background object.
