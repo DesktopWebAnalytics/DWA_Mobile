@@ -7,7 +7,7 @@
 	Licence http://www.gnu.org/licenses/gpl-3.0-standalone.html GPL v3 or later
 -->
 <s:View xmlns:fx="http://ns.adobe.com/mxml/2009" 
-		xmlns:s="library://ns.adobe.com/flex/spark"
+		xmlns:s="library://ns.adobe.com/flex/spark" initialize="initializeV()"
 		viewActivate="dashboardViewActivate(event)" xmlns:states="views.states.*" currentState="loading" destructionPolicy="never">
 	<fx:Script>
 		<![CDATA[
@@ -22,6 +22,10 @@
 			
 			private const DAY:int = 86400000;
 			
+			protected function initializeV():void{
+				// hide back button
+				if(!FlexGlobals.topLevelApplication.showBackButton) dashboardBackButton.includeInLayout = dashboardBackButton.visible = false;
+			}
 			protected function dashboardViewActivate(event:ViewNavigatorEvent):void
 			{
 				trace("view dashboard phone");
@@ -114,7 +118,7 @@
 		<s:DateTimeFormatter id="formatApiDate" dateTimePattern="yyyy-MM-dd" locale="en_US" />
 	</fx:Declarations>
 	<s:navigationContent>
-		<s:Button id="dashboardBackButton" styleName="actionButton" label="{resourceManager.getString('piwik', 'Mobile_NavigationBack')}" visible="{FlexGlobals.topLevelApplication.showBackButton}" click="popView()" />
+		<s:Button id="dashboardBackButton" styleName="actionButton" label="{resourceManager.getString('piwik', 'Mobile_NavigationBack')}" click="popView()" />
 	</s:navigationContent>
 	
 	<s:navigationLayout>

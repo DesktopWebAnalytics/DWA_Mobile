@@ -8,7 +8,7 @@
 -->
 <s:View xmlns:fx="http://ns.adobe.com/mxml/2009" 
 		xmlns:s="library://ns.adobe.com/flex/spark" 
-		title="{resourceManager.getString('piwik', 'General_Delete')}" initialize="view1_initializeHandler(event)" viewActivate="initView()">
+		title="{resourceManager.getString('piwik', 'General_Delete')}" initialize="initializeV()" viewActivate="activeView()">
 	<fx:Script>
 		<![CDATA[
 			import com.dwa.common.database.DataBase;
@@ -17,7 +17,16 @@
 			import mx.core.FlexGlobals;
 			import mx.events.FlexEvent;
 			
-			protected function initView():void
+			protected function initializeV():void{
+				if(!FlexGlobals.topLevelApplication.isTablet){
+					// hide action bar
+					actionBarVisible = false;
+				}else{
+					// hide back button
+					if(!FlexGlobals.topLevelApplication.showBackButton) backButton.includeInLayout = backButton.visible = false;
+				}
+			}
+			protected function activeView():void
 			{
 				
 			}
@@ -48,21 +57,13 @@
 				currentState = "normal";
 			}
 			
-			protected function view1_initializeHandler(event:FlexEvent):void
-			{
-				// TODO Auto-generated method stub
-				if(!FlexGlobals.topLevelApplication.isTablet){
-					actionBarVisible = false;
-				}
-			}
-			
 		]]>
 	</fx:Script>
 	<fx:Declarations>
 		<!-- Placer ici les éléments non visuels (services et objets de valeur, par exemple). -->
 	</fx:Declarations>
 	<s:navigationContent>
-		<s:Button id="backButton" styleName="actionButton" label="{resourceManager.getString('piwik', 'Mobile_NavigationBack')}" visible="{FlexGlobals.topLevelApplication.showBackButton}" click="navigator.popView()" />
+		<s:Button id="backButton" styleName="actionButton" label="{resourceManager.getString('piwik', 'Mobile_NavigationBack')}" click="navigator.popView()" />
 	</s:navigationContent>
 	
 	<s:layout>

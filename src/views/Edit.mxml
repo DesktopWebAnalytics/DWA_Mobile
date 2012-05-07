@@ -37,7 +37,11 @@
 			protected function view1_initializeHandler(event:FlexEvent):void
 			{
 				if(!FlexGlobals.topLevelApplication.isTablet){
+					// hide action bar
 					actionBarVisible = false;
+				}else{
+					// hide back button
+					if(!FlexGlobals.topLevelApplication.showBackButton) backButton.includeInLayout = backButton.visible = false;
 				}
 			}
 			private function incrementPeriod():void{
@@ -94,7 +98,7 @@
 		<!-- Placer ici les éléments non visuels (services et objets de valeur, par exemple). -->
 	</fx:Declarations>
 	<s:navigationContent>
-		<s:Button id="backButton" styleName="actionButton" label="{resourceManager.getString('piwik', 'Mobile_NavigationBack')}" visible="{FlexGlobals.topLevelApplication.showBackButton}" click="navigator.popView()" />
+		<s:Button id="backButton" styleName="actionButton" label="{resourceManager.getString('piwik', 'Mobile_NavigationBack')}" click="navigator.popView()" />
 	</s:navigationContent>
 	
 	<s:states>

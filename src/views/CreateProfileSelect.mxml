@@ -9,7 +9,7 @@
 <s:View xmlns:fx="http://ns.adobe.com/mxml/2009" 
 				 xmlns:s="library://ns.adobe.com/flex/spark"
 				 title="{resourceManager.getString('piwik', 'SitesManager_AddSite')}"
-				 viewActivate="initView()" keyDown="view1_keyDownHandler(event)">
+				 viewActivate="initView()" initialize="initializeV()" keyDown="view1_keyDownHandler(event)">
 	
 	<fx:Script>
 		<![CDATA[
@@ -22,6 +22,10 @@
 			private const MINPERIOD:int = 2;
 			private const MAXPERIOD:int = 30;
 			
+			protected function initializeV():void{
+				// hide back button
+				if(!FlexGlobals.topLevelApplication.showBackButton) backButton.includeInLayout = backButton.visible = false;
+			}
 			private function initView():void{
 				
 				selectWebsite.dataProvider = new ArrayList(data as Array);
@@ -112,7 +116,7 @@
 		<!-- Placer ici les éléments non visuels (services et objets de valeur, par exemple). -->
 	</fx:Declarations>
 	<s:navigationContent>
-		<s:Button id="backButton" styleName="actionButton" label="{resourceManager.getString('piwik', 'Mobile_NavigationBack')}" visible="{FlexGlobals.topLevelApplication.showBackButton}" click="navigator.popView()" />
+		<s:Button id="backButton" styleName="actionButton" label="{resourceManager.getString('piwik', 'Mobile_NavigationBack')}" click="navigator.popView()" />
 	</s:navigationContent>
 	
 	<s:states>
