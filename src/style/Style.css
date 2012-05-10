@@ -15,7 +15,7 @@
 s|Application
 {
 	background-color:#FFFFFF;
-	color:black;
+	color: #898989;
 	fontSize:16;
 }
 s|ActionBar{
@@ -157,9 +157,8 @@ s|RadioButton
 	color:#FF9E00;
 }
 
-#titleView{
+#titleLabel{
 	fontSize: 18;
-	textAlign: center;
 }
 
 .legend{

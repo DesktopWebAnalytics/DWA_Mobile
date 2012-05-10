@@ -30,8 +30,8 @@
 			private var profile:Profile;
 			
 			private function initView():void{
-				
-				titleView.text = data + " - " + resourceManager.getString('piwik', 'General_DateRange') + ' ' + shortDateFormatter.format(FlexGlobals.topLevelApplication.selectedStartDate) + " - " + shortDateFormatter.format(FlexGlobals.topLevelApplication.selectedEndDate);
+				titleLabel.text = data as String;
+				dateLabel.text = resourceManager.getString('piwik', 'General_DateRangeFromTo').replace('%s', shortDateFormatter.format(FlexGlobals.topLevelApplication.selectedStartDate)).replace('%s', shortDateFormatter.format(FlexGlobals.topLevelApplication.selectedEndDate));
 				
 				profile = FlexGlobals.topLevelApplication.selectedProfile;
 				
@@ -40,7 +40,7 @@
 				report.addEventListener(ErrorEvent.ERROR, error);
 				report.getVisitsChart(profile, FlexGlobals.topLevelApplication.selectedPeriodDate);
 				
-				report2 = new Reports();
+				report2 = new Reports("en");
 				report2.addEventListener(Event.COMPLETE, resultCall2);
 				report2.addEventListener(ErrorEvent.ERROR, error2);
 				report2.getVisits(profile, FlexGlobals.topLevelApplication.selectedPeriodDate);
@@ -92,22 +92,17 @@
 				trace("draw chart");
 				currentState = "chart";
 				
-				//nbVisits.text = resourceManager.getString('piwik', 'VisitsSummary_NbVisits').replace('%s', result2.nb_visits);
 				nbVisits.text = nFormat.format(result2.nb_visits);
 				
-				//nbActions.text = resourceManager.getString('piwik', 'VisitsSummary_NbActionsDescription').replace('%s', result2.nb_actions);
+				//nbActions.text = nFormat.format(1000000000);
 				nbActions.text = nFormat.format(result2.nb_actions);
 				
-				//maxActions.text = resourceManager.getString('piwik', 'VisitsSummary_MaxNbActions').replace('%s', result2.max_actions);
 				maxActions.text = nFormat.format(result2.max_actions);
 				
-				//bounceRate.text = resourceManager.getString('piwik', 'VisitsSummary_NbVisitsBounced').replace('%s', result2.bounce_rate);
 				bounceRate.text = result2.bounce_rate;
 				
-				//actions.text = resourceManager.getString('piwik', 'VisitsSummary_NbActionsPerVisit').replace('%s', result2.nb_actions_per_visit);
 				actions.text = nFormat.format(result2.nb_actions_per_visit);
 				
-				//duration.text = resourceManager.getString('piwik', 'VisitsSummary_AverageVisitDuration').replace('%s', getTime(result2.avg_time_on_site));
 				duration.text = getTime(result2.avg_time_on_site);
 				
 				converted.text = nFormat.format(result2.nb_visits_converted);
@@ -147,14 +142,13 @@
 	<fx:Declarations>
 		<!-- Placer ici les éléments non visuels (services et objets de valeur, par exemple). -->
 		
-		<s:DateTimeFormatter id="dateTimeFormatter"
-							 locale="{resourceManager.getString('piwik', 'General_Locale')}"
-							 timeStyle="none"/>
 		<s:DateTimeFormatter id="shortDateFormatter" dateStyle="short"
 							 locale="{resourceManager.getString('piwik', 'General_Locale')}"
 							 timeStyle="none"/>
 		
-		<s:NumberFormatter id="nFormat" trailingZeros="false" locale="{resourceManager.getString('piwik', 'General_Locale')}" />
+		<s:NumberFormatter id="nFormat"
+						   locale="{resourceManager.getString('piwik', 'General_Locale')}"
+						   trailingZeros="false"/>
 	</fx:Declarations>
 	
 	<s:states>
@@ -168,7 +162,13 @@
 		<s:VerticalLayout paddingBottom="5" paddingLeft="5" paddingRight="5" paddingTop="10"/>
 	</s:layout>
 	
-	<s:Label id="titleView" width="100%"/>
+	<s:Group width="100%">
+		<s:layout>
+			<s:VerticalLayout horizontalAlign="center"/>
+		</s:layout>
+		<s:Label id="titleLabel"/>
+		<s:Label id="dateLabel"/>
+	</s:Group>
 	
 	<states:Loader includeIn="loading" width="100%" height="100%"/>
 	
@@ -180,58 +180,65 @@
 			<s:VGroup id="box" width="100%" height="100%">
 				<s:SkinnableContainer width="100%" skinClass="skin.components.ShowNumber">
 					<s:layout>
-						<s:VerticalLayout gap="0" />
+						<s:VerticalLayout gap="0"/>
 					</s:layout>
-					<s:Label id="nbVisits" styleName="number" width="100%" maxDisplayedLines="1" />
-					<s:Label width="100%" maxDisplayedLines="1" text="{resourceManager.getString('piwik', 'General_ColumnNbVisits')}" />
+					<s:Label id="nbVisits" width="100%" maxDisplayedLines="1" styleName="number"/>
+					<s:Label width="100%" maxDisplayedLines="1"
+							 text="{resourceManager.getString('piwik', 'General_ColumnNbVisits')}"/>
 				</s:SkinnableContainer>
 				
 				<s:SkinnableContainer width="100%" skinClass="skin.components.ShowNumber">
 					<s:layout>
-						<s:VerticalLayout gap="0" />
+						<s:VerticalLayout gap="0"/>
 					</s:layout>
-					<s:Label id="nbActions" styleName="number" width="100%" maxDisplayedLines="1"/>
-					<s:Label width="100%" maxDisplayedLines="1" text="{resourceManager.getString('piwik', 'General_ColumnNbActions')}" />
+					<s:Label id="nbActions" width="100%" maxDisplayedLines="1" styleName="number"/>
+					<s:Label width="100%" maxDisplayedLines="1"
+							 text="{resourceManager.getString('piwik', 'General_ColumnNbActions')}"/>
 				</s:SkinnableContainer>
 				
 				<s:SkinnableContainer width="100%" skinClass="skin.components.ShowNumber">
 					<s:layout>
-						<s:VerticalLayout gap="0" />
+						<s:VerticalLayout gap="0"/>
 					</s:layout>
-					<s:Label id="actions" styleName="number" width="100%" maxDisplayedLines="1" />
-					<s:Label width="100%" maxDisplayedLines="1" text="{resourceManager.getString('piwik', 'General_ColumnActionsPerVisit')}" />
+					<s:Label id="actions" width="100%" maxDisplayedLines="1" styleName="number"/>
+					<s:Label width="100%" maxDisplayedLines="1"
+							 text="{resourceManager.getString('piwik', 'General_ColumnActionsPerVisit')}"/>
 				</s:SkinnableContainer>
 				
 				<s:SkinnableContainer width="100%" skinClass="skin.components.ShowNumber">
 					<s:layout>
-						<s:VerticalLayout gap="0" />
+						<s:VerticalLayout gap="0"/>
 					</s:layout>
-					<s:Label id="converted" styleName="number" width="100%" maxDisplayedLines="1" />
-					<s:Label width="100%" maxDisplayedLines="1" text="{resourceManager.getString('piwik', 'General_ColumnVisitsWithConversions')}" />
+					<s:Label id="converted" width="100%" maxDisplayedLines="1" styleName="number"/>
+					<s:Label width="100%" maxDisplayedLines="1"
+							 text="{resourceManager.getString('piwik', 'General_ColumnVisitsWithConversions')}"/>
 				</s:SkinnableContainer>
 				
 				<s:SkinnableContainer width="100%" skinClass="skin.components.ShowNumber">
 					<s:layout>
-						<s:VerticalLayout gap="0" />
+						<s:VerticalLayout gap="0"/>
 					</s:layout>
-					<s:Label id="duration" styleName="number" width="100%" maxDisplayedLines="1" />
-					<s:Label width="100%" maxDisplayedLines="1" text="{resourceManager.getString('piwik', 'General_ColumnAvgTimeOnSiteDocumentation')}" />
+					<s:Label id="duration" width="100%" maxDisplayedLines="1" styleName="number"/>
+					<s:Label width="100%" maxDisplayedLines="1"
+							 text="{resourceManager.getString('piwik', 'General_ColumnAvgTimeOnSiteDocumentation')}"/>
 				</s:SkinnableContainer>
 				
 				<s:SkinnableContainer width="100%" skinClass="skin.components.ShowNumber">
 					<s:layout>
-						<s:VerticalLayout gap="0" />
+						<s:VerticalLayout gap="0"/>
 					</s:layout>
-					<s:Label id="bounceRate" styleName="number" width="100%" maxDisplayedLines="1" />
-					<s:Label width="100%" maxDisplayedLines="1" text="{resourceManager.getString('piwik', 'General_ColumnBounceRate')}" />
+					<s:Label id="bounceRate" width="100%" maxDisplayedLines="1" styleName="number"/>
+					<s:Label width="100%" maxDisplayedLines="1"
+							 text="{resourceManager.getString('piwik', 'General_ColumnBounceRate')}"/>
 				</s:SkinnableContainer>
 				
 				<s:SkinnableContainer width="100%" skinClass="skin.components.ShowNumber">
 					<s:layout>
-						<s:VerticalLayout gap="0" />
+						<s:VerticalLayout gap="0"/>
 					</s:layout>
-					<s:Label id="maxActions" styleName="number" width="100%" maxDisplayedLines="1" />
-					<s:Label width="100%" maxDisplayedLines="1" text="{resourceManager.getString('piwik', 'General_ColumnMaxActions')}" />
+					<s:Label id="maxActions" width="100%" maxDisplayedLines="1" styleName="number"/>
+					<s:Label width="100%" maxDisplayedLines="1"
+							 text="{resourceManager.getString('piwik', 'General_ColumnMaxActions')}"/>
 				</s:SkinnableContainer>
 			</s:VGroup>
 		</s:Scroller>

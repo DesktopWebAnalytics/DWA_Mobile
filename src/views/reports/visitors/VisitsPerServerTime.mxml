@@ -26,7 +26,9 @@
 			private var result:XMLListCollection;
 			
 			private function initView():void{
-				titleView.text = data + " - " + resourceManager.getString('piwik', 'General_DateRange') + ' ' + dateTimeFormmatter.format(FlexGlobals.topLevelApplication.selectedStartDate) + " - " + dateTimeFormmatter.format(FlexGlobals.topLevelApplication.selectedEndDate);
+				titleLabel.text = data as String;
+				dateLabel.text = resourceManager.getString('piwik', 'General_DateRangeFromTo').replace('%s', shortDateFormatter.format(FlexGlobals.topLevelApplication.selectedStartDate)).replace('%s', shortDateFormatter.format(FlexGlobals.topLevelApplication.selectedEndDate));
+				
 				profile = FlexGlobals.topLevelApplication.selectedProfile;
 				
 				report = new Reports();
@@ -60,9 +62,10 @@
 	<fx:Declarations>
 		<!-- Placer ici les éléments non visuels (services et objets de valeur, par exemple). -->
 		
-		<s:DateTimeFormatter id="dateTimeFormmatter"
+		<s:DateTimeFormatter id="shortDateFormatter" dateStyle="short"
 							 locale="{resourceManager.getString('piwik', 'General_Locale')}"
 							 timeStyle="none"/>
+		
 	</fx:Declarations>
 	
 	<s:states>
@@ -76,7 +79,13 @@
 		<s:VerticalLayout paddingBottom="5" paddingLeft="5" paddingRight="5" paddingTop="10"/>
 	</s:layout>
 	
-	<s:Label id="titleView" width="100%"/>
+	<s:Group width="100%">
+		<s:layout>
+			<s:VerticalLayout horizontalAlign="center"/>
+		</s:layout>
+		<s:Label id="titleLabel"/>
+		<s:Label id="dateLabel"/>
+	</s:Group>
 	
 	<states:Loader includeIn="loading" width="100%" height="100%"/>
 	
