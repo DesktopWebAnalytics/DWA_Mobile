@@ -7,7 +7,7 @@
 	Licence http://www.gnu.org/licenses/gpl-3.0-standalone.html GPL v3 or later
 -->
 <s:Skin xmlns:fx="http://ns.adobe.com/mxml/2009" 
-		xmlns:s="library://ns.adobe.com/flex/spark">
+		xmlns:s="library://ns.adobe.com/flex/spark" xmlns:skin="skin.*" xmlns:fxg="skin.fxg.*">
 	<!-- host component -->
 	<fx:Metadata>
 		[HostComponent("spark.components.SkinnableContainer")]
@@ -23,13 +23,19 @@
 	name=contentGroup, type=spark.components.Group, required=false
 	-->
 	
-	<s:Rect top="0" bottom="0" left="0" right="0" radiusX="5" radiusY="5">
+	<s:Rect top="0" bottom="0" left="0" right="0" >
 		<s:fill>
 			<s:LinearGradient rotation="90">
 				<s:GradientEntry color="#FFA800" />
 				<s:GradientEntry color="#FFA800" alpha=".6" />
 			</s:LinearGradient>
 		</s:fill>
+		<!--<s:stroke>
+			<s:LinearGradientStroke rotation="90">
+				<s:GradientEntry color="#FFA800" alpha=".2" />
+				<s:GradientEntry color="#FFA800" alpha=".7" />
+			</s:LinearGradientStroke>
+		</s:stroke>-->
 	</s:Rect>
 	
 	<s:Group id="contentGroup" top="5" bottom="5" left="5" right="5" />
