@@ -84,17 +84,14 @@
 					trace('handle back button');
 				}
 				
-				//if(Capabilities.isDebugger) addStats(this);
-				
 				isTablet = height > 960 || width > 960;
 				isSmallScreen = height < 500 || width < 500;
-				
-				
 				
 				//NativeApplication.nativeApplication.addEventListener(InvokeEvent.INVOKE, invoke);
 				
 				if(Capabilities.isDebugger) {
-					//changeLocale("it_IT");
+					//changeLocale("en_US");
+					//addStats(this);
 				}
 			}
 			protected function applicationComplete():void{

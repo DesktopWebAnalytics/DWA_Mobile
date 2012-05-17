@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<s:View xmlns:fx="http://ns.adobe.com/mxml/2009" 
-		xmlns:s="library://ns.adobe.com/flex/spark" actionBarVisible="false" currentState="loading" viewActivate="viewActive(event)" xmlns:states="views.states.*">
+<s:View xmlns:fx="http://ns.adobe.com/mxml/2009"
+		xmlns:s="library://ns.adobe.com/flex/spark"
+		xmlns:states="views.states.*"
+		actionBarVisible="false" currentState="loading" viewActivate="viewActive(event)">
 	<fx:Script>
 		<![CDATA[
 			import com.dwa.common.reports.Reports;
@@ -100,7 +102,8 @@
 					<s:layout>
 						<s:VerticalLayout gap="0"/>
 					</s:layout>
-					<s:Label id="visitsConverted" width="100%" maxDisplayedLines="1" styleName="number"/>
+					<s:Label id="visitsConverted" width="100%" maxDisplayedLines="1"
+							 styleName="number"/>
 					<s:Label width="100%" maxDisplayedLines="1"
 							 text="{resourceManager.getString('piwik', 'General_ColumnVisitsWithConversions')}"/>
 				</s:SkinnableContainer>
@@ -109,7 +112,8 @@
 					<s:layout>
 						<s:VerticalLayout gap="0"/>
 					</s:layout>
-					<s:Label id="convertionRate" width="100%" maxDisplayedLines="1" styleName="number"/>
+					<s:Label id="convertionRate" width="100%" maxDisplayedLines="1"
+							 styleName="number"/>
 					<s:Label width="100%" maxDisplayedLines="1"
 							 text="{resourceManager.getString('piwik', 'General_ColumnConversionRate')}"/>
 				</s:SkinnableContainer>

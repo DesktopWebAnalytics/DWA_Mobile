@@ -34,6 +34,11 @@ F
 	-->
 	<!--<fxg:ActionBarBackground width="100%" height="45" />-->
 	
+	
+	<s:RectangularDropShadow left="0" right="0" top="0" bottom="0"
+							 alpha=".43" blurX="7" blurY="7"
+							 color="#5B7680" distance="0"
+							 />
 	<s:Rect left="0" right="0" top="0" bottom="0">
 		<s:fill>
 			<s:LinearGradient rotation="90">
@@ -42,10 +47,6 @@ F
 			</s:LinearGradient>
 		</s:fill>
 	</s:Rect>
-	<s:RectangularDropShadow left="0" right="0" top="0" bottom="0"
-							 alpha=".43" blurX="7" blurY="7"
-							 color="#5B7680" distance="0"
-							 />
 	
 	<s:Group left="0" right="0" top="0" bottom="0">
 		<s:Group id="titleGroup" />
