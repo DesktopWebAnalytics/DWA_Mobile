@@ -71,14 +71,8 @@
 				<s:Label text="Desktop Web Analytics - For Piwik" color="#FF7D01" click="navTo('http://www.desktop-web-analytics.com')" />
 				<s:Label id="version" />
 				
-				<s:Line width="100%">
-					<s:stroke>
-						<s:SolidColorStroke weight="1" color="#CCCCCC" />
-					</s:stroke>
-				</s:Line>
-				
-				<s:Label text="Developed by" />
-				<s:Label text="POUZET Benoit" color="#FF7D01" click="navTo('http://www.pouzetbenoit.com')" />
+				<s:Label text="Copyright (C) 2011-2012 Benoit Pouzet" />
+				<s:Label text="License GPL v3 or later" color="#FF7D01" click="navTo('http://www.gnu.org/licenses/gpl-3.0-standalone.html')" />
 				
 				<s:Line width="100%">
 					<s:stroke>
