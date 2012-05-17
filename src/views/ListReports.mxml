@@ -44,22 +44,28 @@
 			
 			private var goals:Reports;
 			
+			private var created:Boolean = false;
+			
 			private function initView():void{
 				trace("Liste reports");
 				
-				goals = new Reports();
-				goals.addEventListener(Event.COMPLETE, resultGoals);
-				goals.addEventListener(ErrorEvent.ERROR, errorGoals);
-				goals.getAllGoals(FlexGlobals.topLevelApplication.selectedProfile);
-				
-				reportsList.dataProvider = reports;
-				
-				if(FlexGlobals.topLevelApplication.isTablet) {
-					reportsList.selectedIndex = 1;
-					FlexGlobals.topLevelApplication.currentView = Visits;
-					var splitNavigator:SplitViewNavigator = navigator.parentNavigator as SplitViewNavigator;
+				if(!created){
+					goals = new Reports();
+					goals.addEventListener(Event.COMPLETE, resultGoals);
+					goals.addEventListener(ErrorEvent.ERROR, errorGoals);
+					goals.getAllGoals(FlexGlobals.topLevelApplication.selectedProfile);
 					
-					(splitNavigator.getViewNavigatorAt(1) as ViewNavigator).pushView(Visits, reports.getItemAt(1).label);
+					reportsList.dataProvider = reports;
+					
+					created = true;
+					
+					if(FlexGlobals.topLevelApplication.isTablet) {
+						reportsList.selectedIndex = 1;
+						FlexGlobals.topLevelApplication.currentView = Visits;
+						var splitNavigator:SplitViewNavigator = navigator.parentNavigator as SplitViewNavigator;
+						
+						(splitNavigator.getViewNavigatorAt(1) as ViewNavigator).pushView(Visits, reports.getItemAt(1).label);
+					}
 				}
 			}
 			private function clearGoals():void{
