@@ -67,7 +67,7 @@
 			</s:layout>
 			
 			<s:VGroup horizontalAlign="center" >
-				<s:BitmapImage source="@Embed('assets/128x128a.png')" />
+				<s:BitmapImage source="@Embed('assets/128x128a.png')" smooth="true" />
 				<s:Label text="Desktop Web Analytics - For Piwik" color="#FF7D01" click="navTo('http://www.desktop-web-analytics.com')" />
 				<s:Label id="version" />
 				
