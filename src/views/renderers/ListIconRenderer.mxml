@@ -57,7 +57,7 @@
 		]]>
 	</fx:Script>
 	
-	<s:BitmapImage id="logo" left="2" verticalCenter="0"/>
+	<s:BitmapImage id="logo" left="2" verticalCenter="0" smooth="true"/>
 	<s:Label id="lab" left="22" verticalCenter="0"/>
 	<s:Label id="visits" right="7" verticalCenter="0"/>
 	
