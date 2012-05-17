@@ -37,6 +37,7 @@
 			}
 			private function resultReport(event:Event):void{
 				var result:XML = report.result;
+				clearReport();
 				
 				currentState = "chart";
 				
