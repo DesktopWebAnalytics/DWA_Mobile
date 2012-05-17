@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:View xmlns:fx="http://ns.adobe.com/mxml/2009" 
+		xmlns:s="library://ns.adobe.com/flex/spark" xmlns:states="views.states.*" actionBarVisible="false" currentState="loading" viewActivate="viewActive(event)">
+	<fx:Script>
+		<![CDATA[
+			import com.dwa.common.reports.Reports;
+			
+			import mx.collections.XMLListCollection;
+			import mx.core.FlexGlobals;
+			
+			import spark.events.ViewNavigatorEvent;
+			
+			private var report:Reports;
+			
+			protected function viewActive(event:ViewNavigatorEvent):void
+			{
+				titleLabel.text = data as String;
+				
+				report = new Reports();
+				report.addEventListener(Event.COMPLETE, resultReport);
+				report.addEventListener(ErrorEvent.ERROR, errorReport);
+				report.getLive(FlexGlobals.topLevelApplication.selectedProfile);
+			}
+			private function clearReport():void{
+				report.removeEventListener(Event.COMPLETE, resultReport);
+				report.removeEventListener(ErrorEvent.ERROR, errorReport);
+				report = null;
+			}
+			private function errorReport(event:ErrorEvent):void{
+				trace("error report live");
+				currentState = "error";
+				errorState.message(event.text);
+				clearReport();
+			}
+			private function resultReport(event:Event):void{
+				var result:XMLListCollection = report.resultCollectionRow;
+				clearReport();
+				
+				currentState = "tab";
+				
+				liveList.dataProvider = result;
+			}
+			
+		]]>
+	</fx:Script>
+	<fx:Declarations>
+		<s:DateTimeFormatter id="shortDateFormatter" dateStyle="short"
+							 locale="{resourceManager.getString('piwik', 'General_Locale')}"
+							 timeStyle="none"/>
+		
+	</fx:Declarations>
+	
+	<s:states>
+		<s:State name="loading"/>
+		<s:State name="chart"/>
+		<s:State name="tab"/>
+		<s:State name="error"/>
+	</s:states>
+	
+	<s:layout>
+		<s:VerticalLayout paddingBottom="5" paddingLeft="5" paddingRight="5" paddingTop="10"/>
+	</s:layout>
+	
+	<s:Group width="100%">
+		<s:layout>
+			<s:VerticalLayout horizontalAlign="center"/>
+		</s:layout>
+		<s:Label id="titleLabel"/>
+		<s:Label id="dateLabel"/>
+	</s:Group>
+	
+	<states:Loader includeIn="loading" width="100%" height="100%"/>
+	
+	<states:Error id="errorState" includeIn="error" width="100%" height="100%"/>
+	
+	<s:List id="liveList" includeIn="tab" width="100%" height="100%" itemRenderer="views.renderers.LiveRenderer" />
+</s:View>

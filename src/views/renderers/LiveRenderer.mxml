@@ -1,0 +1,157 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:ItemRenderer xmlns:fx="http://ns.adobe.com/mxml/2009"
+				xmlns:s="library://ns.adobe.com/flex/spark"
+				width="100%" height="82" initialize="itemrenderer1_initializeHandler(event)"
+				opaqueBackground="0xFFFFFF">
+	<fx:Script>
+		<![CDATA[
+			import com.dwa.common.icons.LoadIcons;
+			
+			import mx.core.FlexGlobals;
+			import mx.events.FlexEvent;
+			
+			import spark.core.ContentCache;
+			
+			static private const iconCache:ContentCache = new ContentCache();
+			
+			private var path:String = FlexGlobals.topLevelApplication.selectedProfile.websitePiwikAccess;
+			
+			private var iconFlag:LoadIcons;
+			private var iconOs:LoadIcons;
+			private var iconBrowser:LoadIcons;
+			private var iconScreen:LoadIcons;
+			
+			private var iconUser:LoadIcons;
+			private var iconGoal:LoadIcons;
+			
+			protected function itemrenderer1_initializeHandler(event:FlexEvent):void
+			{
+				logoCountry.contentLoader = iconCache;
+				logoOS.contentLoader = iconCache;
+				logoBrowser.contentLoader = iconCache;
+				logoBrowser.contentLoader = iconCache;
+				
+				logoUser.contentLoader = iconCache;
+				logoGoal.contentLoader = iconCache;
+			}
+			
+			override public function set data(value:Object):void{
+				super.data = value;
+				if(data == null) return;
+				
+				var item:Object = data;
+				
+				/** 1st ligne **/
+				visitor.text = resourceManager.getString("piwik", "General_Visitor") + " #" + item.idVisit + " - " + item.serverDatePretty + " - " + item.serverTimePretty;
+				
+				if(item.goalConversions != "0") nbGoals.text = "# " + item.goalConversions;
+				else nbGoals.text = "";
+				
+				var referrerInfo:String = "";
+				if(item.referrerName != ""){
+					
+					referrerInfo = item.referrerName;
+					
+					if(item.referrerKeywordPosition != "") referrerInfo += " #" + item.referrerKeywordPosition;
+					
+					if(item.referrerKeyword != "") referrerInfo += '"' + item.referrerKeyword + '"';
+				}
+				referrer.text = resourceManager.getString('piwik', 'Live_Referrer_URL') + ": " + referrerInfo;
+				
+				
+				var actionInfo:String = resourceManager.getString('piwik', 'Live_Actions') + ": " + item.actions + ", " + resourceManager.getString('piwik', 'VisitorInterest_WidgetLengths') + ": " + item.visitDurationPretty;
+				
+				actions.text = actionInfo;
+				
+				iconFlag = new LoadIcons();
+				iconFlag.addEventListener(Event.COMPLETE, sourceFlag);
+				iconFlag.cache(path + item.countryFlag);
+				
+				iconOs = new LoadIcons();
+				iconOs.addEventListener(Event.COMPLETE, sourceOs);
+				iconOs.cache(path + item.operatingSystemIcon);
+				
+				iconBrowser = new LoadIcons();
+				iconBrowser.addEventListener(Event.COMPLETE, sourceBrowser);
+				iconBrowser.cache(path + item.browserIcon);
+				
+				iconScreen = new LoadIcons();
+				iconScreen.addEventListener(Event.COMPLETE, sourceScreen);
+				iconScreen.cache(path + item.screenTypeIcon);
+				
+				if(item.visitorType == "returning"){
+					iconUser = new LoadIcons();
+					iconUser.addEventListener(Event.COMPLETE, sourceUser);
+					iconUser.cache(path + item.visitorTypeIcon);
+				}else{
+					logoUser.source = null;
+				}
+				
+				if(item.visitConverted == "1"){
+					iconGoal = new LoadIcons();
+					iconGoal.addEventListener(Event.COMPLETE, sourceGoal);
+					iconGoal.cache(path + item.visitConvertedIcon);
+				}else{
+					logoGoal.source = null;
+				}
+			}
+			private function sourceFlag(event:Event):void{
+				logoCountry.source = iconFlag.path;
+				
+				iconFlag.removeEventListener(Event.COMPLETE, sourceFlag);
+				iconFlag = null;
+			}
+			private function sourceOs(event:Event):void{
+				logoOS.source = iconOs.path;
+				
+				iconOs.removeEventListener(Event.COMPLETE, sourceOs);
+				iconOs = null;
+			}
+			private function sourceBrowser(event:Event):void{
+				logoBrowser.source = iconBrowser.path;
+				
+				iconBrowser.removeEventListener(Event.COMPLETE, sourceBrowser);
+				iconBrowser = null;
+			}
+			private function sourceScreen(event:Event):void{
+				logoScreen.source = iconScreen.path;
+				
+				iconScreen.removeEventListener(Event.COMPLETE, sourceScreen);
+				iconScreen = null;
+			}
+			private function sourceUser(event:Event):void{
+				logoUser.source = iconUser.path;
+				
+				iconUser.removeEventListener(Event.COMPLETE, sourceUser);
+				iconUser = null;
+			}
+			private function sourceGoal(event:Event):void{
+				logoGoal.source = iconGoal.path;
+				
+				iconGoal.removeEventListener(Event.COMPLETE, sourceGoal);
+				iconGoal = null;
+			}
+			
+		]]>
+	</fx:Script>
+	<s:Label id="visitor" left="2" right="2" top="2" maxDisplayedLines="1"/>
+	
+	<s:BitmapImage id="logoCountry" left="2" top="22" smooth="true"/>
+	<s:BitmapImage id="logoOS" left="24" top="22" smooth="true"/>
+	<s:BitmapImage id="logoBrowser" left="42" top="22" smooth="true"/>
+	<s:BitmapImage id="logoScreen" left="60" top="22" smooth="true"/>
+	
+	<s:BitmapImage id="logoUser" left="78" top="22" smooth="true"/>
+	<s:BitmapImage id="logoGoal" left="100" top="22" smooth="true"/>
+	<s:Label id="nbGoals" left="120" top="24" />
+	
+	<s:Label id="referrer" left="2" right="2" top="42" maxDisplayedLines="1"/>
+	
+	<s:Label id="actions" left="2" right="2" top="62" maxDisplayedLines="1"/>
+	
+	<s:Line left="0" right="0" bottom="2">
+		<s:stroke>
+			<s:SolidColorStroke color="#CCCCCC" weight="2"/>
+		</s:stroke>
+	</s:Line>
+</s:ItemRenderer>

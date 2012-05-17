@@ -25,6 +25,7 @@
 			import views.reports.actions.PageTitles;
 			import views.reports.actions.Pages;
 			import views.reports.goals.Goals;
+			import views.reports.live.Live;
 			import views.reports.referers.Campaigns;
 			import views.reports.referers.Keywords;
 			import views.reports.referers.SearchEngines;
@@ -60,11 +61,12 @@
 					created = true;
 					
 					if(FlexGlobals.topLevelApplication.isTablet) {
-						reportsList.selectedIndex = 1;
+						// set default report on tablet
+						reportsList.selectedIndex = 2;
 						FlexGlobals.topLevelApplication.currentView = Visits;
 						var splitNavigator:SplitViewNavigator = navigator.parentNavigator as SplitViewNavigator;
 						
-						(splitNavigator.getViewNavigatorAt(1) as ViewNavigator).pushView(Visits, reports.getItemAt(1).label);
+						(splitNavigator.getViewNavigatorAt(1) as ViewNavigator).pushView(Visits, reports.getItemAt(2).label);
 					}
 				}
 			}
@@ -126,6 +128,11 @@
 		<s:DateTimeFormatter id="dateTimeFormatter" locale="{resourceManager.getString('piwik', 'General_Locale')}" timeStyle="none" />
 		
 		<s:ArrayList id="reports">
+			<fx:Object>
+				<fx:id>live</fx:id>
+				<fx:view>{Live}</fx:view>
+				<fx:label>{resourceManager.getString('piwik', 'Live_VisitorLog')}</fx:label>
+			</fx:Object>
 			<fx:Object>
 				<fx:id>header</fx:id>
 				<fx:view></fx:view>
