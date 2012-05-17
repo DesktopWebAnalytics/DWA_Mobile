@@ -12,6 +12,9 @@
 				 viewActivate="initView()" destructionPolicy="never" >
 	<fx:Script>
 		<![CDATA[
+			import com.dwa.common.reports.Reports;
+			
+			import mx.collections.XMLListCollection;
 			import mx.core.FlexGlobals;
 			
 			import spark.components.SplitViewNavigator;
@@ -21,6 +24,7 @@
 			import views.reports.actions.Outlinks;
 			import views.reports.actions.PageTitles;
 			import views.reports.actions.Pages;
+			import views.reports.goals.Goals;
 			import views.reports.referers.Campaigns;
 			import views.reports.referers.Keywords;
 			import views.reports.referers.SearchEngines;
@@ -38,8 +42,16 @@
 			import views.reports.visitors.VisitsPerServerTime;
 			import views.reports.visitors.WideScreen;
 			
+			private var goals:Reports;
+			
 			private function initView():void{
 				trace("Liste reports");
+				
+				goals = new Reports();
+				goals.addEventListener(Event.COMPLETE, resultGoals);
+				goals.addEventListener(ErrorEvent.ERROR, errorGoals);
+				goals.getAllGoals(FlexGlobals.topLevelApplication.selectedProfile);
+				
 				reportsList.dataProvider = reports;
 				
 				if(FlexGlobals.topLevelApplication.isTablet) {
@@ -50,24 +62,54 @@
 					(splitNavigator.getViewNavigatorAt(1) as ViewNavigator).pushView(Visits, reports.getItemAt(1).label);
 				}
 			}
+			private function clearGoals():void{
+				goals.removeEventListener(Event.COMPLETE, resultGoals);
+				goals.removeEventListener(ErrorEvent.ERROR, errorGoals);
+				goals = null;
+			}
+			private function errorGoals(event:ErrorEvent):void{
+				trace("goals error");
+				clearGoals();
+			}
+			private function resultGoals(event:Event):void{
+				var goalsXMLList:XMLListCollection = goals.resultCollectionRow;
+				clearGoals();
+				
+				// if there is any goal and them to the reports list
+				if(goalsXMLList.length > 0){
+					// add goal header
+					reportsList.dataProvider.addItem({id: "header", view: "", label: resourceManager.getString('piwik', 'Goals_Goals')});
+					
+					for each(var xml:XML in goalsXMLList){
+						reportsList.dataProvider.addItem({id: "goals", view: Goals, label: xml.name, idgoal: xml.idgoal});
+					}
+				}
+			}
 			private function selectReport():void{
 				var report:Object = reportsList.selectedItem;
 				var goToView:Class;
 				
 				// test if it's an heaader
 				if(report.id == "header") return;
-					
+				var dataView:*;
+				
 				goToView = report.view;
+				if(report.id == "goals"){
+					dataView = {label: report.label, idgoal: report.idgoal};
+				}else{
+					dataView = report.label;
+				}
+				
 				
 				FlexGlobals.topLevelApplication.currentView = report;
 				
 				if(!FlexGlobals.topLevelApplication.isTablet){
-					navigator.pushView(goToView, report.label);
+					navigator.pushView(goToView, dataView);
 					reportsList.selectedIndex = -1;
 				}else{
 					var splitNavigator:SplitViewNavigator = navigator.parentNavigator as SplitViewNavigator;
 					
-					(splitNavigator.getViewNavigatorAt(1) as ViewNavigator).pushView(goToView, report.label);
+					(splitNavigator.getViewNavigatorAt(1) as ViewNavigator).pushView(goToView, dataView);
 				}
 			}
 		]]>

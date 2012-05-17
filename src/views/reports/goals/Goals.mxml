@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:View xmlns:fx="http://ns.adobe.com/mxml/2009" 
+		xmlns:s="library://ns.adobe.com/flex/spark" actionBarVisible="false" currentState="loading" viewActivate="viewActive(event)" xmlns:states="views.states.*">
+	<fx:Script>
+		<![CDATA[
+			import com.dwa.common.reports.Reports;
+			
+			import mx.core.FlexGlobals;
+			
+			import spark.events.ViewNavigatorEvent;
+			
+			private var report:Reports;
+			
+			protected function viewActive(event:ViewNavigatorEvent):void
+			{
+				titleLabel.text = data.label;
+				dateLabel.text = resourceManager.getString('piwik', 'General_DateRangeFromTo').replace('%s', shortDateFormatter.format(FlexGlobals.topLevelApplication.selectedStartDate)).replace('%s', shortDateFormatter.format(FlexGlobals.topLevelApplication.selectedEndDate));
+				
+				report = new Reports("en");
+				report.addEventListener(Event.COMPLETE, resultReport);
+				report.addEventListener(ErrorEvent.ERROR, errorReport);
+				report.getGoal(FlexGlobals.topLevelApplication.selectedProfile, FlexGlobals.topLevelApplication.selectedPeriodDate, data.idgoal);
+			}
+			
+			private function clearReport():void{
+				report.removeEventListener(Event.COMPLETE, resultReport);
+				report.removeEventListener(ErrorEvent.ERROR, errorReport);
+				report = null;
+			}
+			private function errorReport(event:ErrorEvent):void{
+				trace("error report goal");
+				clearReport();
+				currentState = "error";
+				errorState.message(event.text);
+			}
+			private function resultReport(event:Event):void{
+				var result:XML = report.result;
+				
+				currentState = "chart";
+				
+				nbConversions.text = nFormat.format(result.nb_conversions);
+				
+				visitsConverted.text = nFormat.format(result.nb_visits_converted);
+				
+				convertionRate.text = nFormat.format(result.conversion_rate);
+				
+				revenue.text = nFormat.format(result.revenue);
+			}
+			
+		]]>
+	</fx:Script>
+	<fx:Declarations>
+		
+		<s:DateTimeFormatter id="shortDateFormatter" dateStyle="short"
+							 locale="{resourceManager.getString('piwik', 'General_Locale')}"
+							 timeStyle="none"/>
+		
+		<s:NumberFormatter id="nFormat"
+						   locale="{resourceManager.getString('piwik', 'General_Locale')}"
+						   trailingZeros="false"/>
+	</fx:Declarations>
+	
+	<s:states>
+		<s:State name="loading"/>
+		<s:State name="chart"/>
+		<s:State name="tab"/>
+		<s:State name="error"/>
+	</s:states>
+	
+	<s:layout>
+		<s:VerticalLayout paddingBottom="5" paddingLeft="5" paddingRight="5" paddingTop="10"/>
+	</s:layout>
+	
+	<s:Group width="100%">
+		<s:layout>
+			<s:VerticalLayout horizontalAlign="center"/>
+		</s:layout>
+		<s:Label id="titleLabel"/>
+		<s:Label id="dateLabel"/>
+	</s:Group>
+	
+	<states:Loader includeIn="loading" width="100%" height="100%"/>
+	
+	<states:Error id="errorState" includeIn="error" width="100%" height="100%"/>
+	
+	<s:Group includeIn="chart" width="100%" height="100%">
+		
+		<s:Scroller width="100%" height="100%" horizontalScrollPolicy="off">
+			<s:VGroup id="box" width="100%" height="100%">
+				<s:SkinnableContainer width="100%" skinClass="skin.components.ShowNumber">
+					<s:layout>
+						<s:VerticalLayout gap="0"/>
+					</s:layout>
+					<s:Label id="nbConversions" width="100%" maxDisplayedLines="1" styleName="number"/>
+					<s:Label width="100%" maxDisplayedLines="1"
+							 text="{resourceManager.getString('piwik', 'Goals_ColumnConversions')}"/>
+				</s:SkinnableContainer>
+				
+				<s:SkinnableContainer width="100%" skinClass="skin.components.ShowNumber">
+					<s:layout>
+						<s:VerticalLayout gap="0"/>
+					</s:layout>
+					<s:Label id="visitsConverted" width="100%" maxDisplayedLines="1" styleName="number"/>
+					<s:Label width="100%" maxDisplayedLines="1"
+							 text="{resourceManager.getString('piwik', 'General_ColumnVisitsWithConversions')}"/>
+				</s:SkinnableContainer>
+				
+				<s:SkinnableContainer width="100%" skinClass="skin.components.ShowNumber">
+					<s:layout>
+						<s:VerticalLayout gap="0"/>
+					</s:layout>
+					<s:Label id="convertionRate" width="100%" maxDisplayedLines="1" styleName="number"/>
+					<s:Label width="100%" maxDisplayedLines="1"
+							 text="{resourceManager.getString('piwik', 'General_ColumnConversionRate')}"/>
+				</s:SkinnableContainer>
+				
+				<s:SkinnableContainer width="100%" skinClass="skin.components.ShowNumber">
+					<s:layout>
+						<s:VerticalLayout gap="0"/>
+					</s:layout>
+					<s:Label id="revenue" width="100%" maxDisplayedLines="1" styleName="number"/>
+					<s:Label width="100%" maxDisplayedLines="1"
+							 text="{resourceManager.getString('piwik', 'Goals_ColumnRevenue')}"/>
+				</s:SkinnableContainer>
+				
+			</s:VGroup>
+		</s:Scroller>
+		
+	</s:Group>
+</s:View>
