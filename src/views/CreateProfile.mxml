@@ -9,7 +9,7 @@
 <s:View xmlns:fx="http://ns.adobe.com/mxml/2009" 
 				 xmlns:s="library://ns.adobe.com/flex/spark"
 				 xmlns:mx="library://ns.adobe.com/flex/mx"
-				 title="{resourceManager.getString('piwik', 'SitesManager_AddSite')}" initialize="initializeV()" viewActivate="initView()" >
+				 title="{resourceManager.getString('piwik', 'SitesManager_AddSite')}" currentState="form" initialize="initializeV()" viewActivate="initView()" >
 	<fx:Script>
 		<![CDATA[
 			import com.dwa.common.profile.Profile;
@@ -166,7 +166,7 @@
 					trace ("Authentication error");
 					errorCheck.text = resourceManager.getString('piwik', 'Login_LoginPasswordNotCorrect');
 				}
-				endLoading();
+				//endLoading();
 			}
 			private function loading():void{
 				currentState = "loading";
@@ -174,7 +174,7 @@
 				checkLoad.visible=true;
 			}
 			private function endLoading():void{
-				currentState = "normal";
+				currentState = "form";
 				buttonCheck.enabled = true;
 				checkLoad.visible=false;
 			}
@@ -193,9 +193,13 @@
 				if(free.selected){
 					userForm.enabled = false;
 					passForm.enabled = false;
+					
+					currentState = "anonymous";
 				}else{
 					userForm.enabled = true;
 					passForm.enabled = true;
+					
+					currentState = "form";
 				}
 			}
 			
@@ -219,7 +223,8 @@
 	</s:navigationContent>
 	
 	<s:states>
-		<s:State name="normal" />
+		<s:State name="form" stateGroups="normal" />
+		<s:State name="anonymous" stateGroups="normal" />
 		<s:State name="loading" />
 	</s:states>
 	
@@ -229,7 +234,7 @@
 			<s:VGroup>
 				<s:Label text="{resourceManager.getString('piwik', 'Mobile_AccessUrlLabel')}" />
 				
-				<s:TextInput id="urlSite" tabIndex="1" needsSoftKeyboard="true" softKeyboardType="url" returnKeyLabel="next" maxWidth="400" height="40" enter="user.setFocus()" />
+				<s:TextInput id="urlSite" tabIndex="1" needsSoftKeyboard="true" autoCorrect="false" softKeyboardType="url" returnKeyLabel="next" enter="user.setFocus()" />
 				<s:VGroup gap="0">
 					<s:Label color="#898989" text="http://www.yourdomain.com/piwik/" />
 				</s:VGroup>
@@ -239,20 +244,20 @@
 				<s:CheckBox id="free" selected="false" label="{resourceManager.getString('piwik', 'Mobile_AnonymousAccess')}" change="changeAn()" />
 			</s:VGroup>
 			
-			<s:VGroup id="userForm">
+			<s:VGroup id="userForm" includeIn="form">
 				<s:Label text="{resourceManager.getString('piwik', 'General_Username')}" />
-				<s:TextInput id="user" tabIndex="2" returnKeyLabel="next" needsSoftKeyboard="true" maxWidth="400" height="40" enter="pass.setFocus()" />
+				<s:TextInput id="user" tabIndex="2" returnKeyLabel="next" needsSoftKeyboard="true" enter="pass.setFocus()" />
 			</s:VGroup>
 			
-			<s:VGroup id="passForm">
+			<s:VGroup id="passForm" includeIn="form">
 				<s:Label text="{resourceManager.getString('piwik', 'Login_Password')}" />
-				<s:TextInput id="pass" tabIndex="3" returnKeyLabel="go" needsSoftKeyboard="true" maxWidth="400" height="40" displayAsPassword="true" enter="stage.focus=null;validInput()" />
+				<s:TextInput id="pass" tabIndex="3" returnKeyLabel="go" needsSoftKeyboard="true" displayAsPassword="true" enter="stage.focus=null;validInput()" />
 			</s:VGroup>
 			
 			<s:VGroup>
 				<s:Label id="errorCheck" color="red" />
 				<s:Button id="buttonCheck" excludeFrom="loading" width="300" maxWidth="440" height="60" label="{resourceManager.getString('piwik', 'Login_LogIn')}" click="validInput()" />
-				<s:BusyIndicator id="checkLoad" width="60" height="60" excludeFrom="normal" />
+				<s:BusyIndicator id="checkLoad" width="60" height="60" includeIn="loading" />
 			</s:VGroup>
 			
 		</s:VGroup>
