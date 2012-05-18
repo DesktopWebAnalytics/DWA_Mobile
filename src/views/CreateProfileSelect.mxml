@@ -71,7 +71,7 @@
 				
 				addDB.addEventListener(Event.COMPLETE, resultSaved);
 				addDB.addEventListener(ErrorEvent.ERROR, errorSaved);
-				addDB.addProfile(list);
+				addDB.insertProfiles(list);
 			}
 			private function resultSaved(event:Event):void{
 				trace("saved");
