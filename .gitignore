@@ -6,7 +6,6 @@
 # osx noise
 .DS_Store
 *.pbxuser
-profile
 
 #Flex Builder noise
 .actionScriptProperties
