@@ -10,7 +10,7 @@
 							xmlns:s="library://ns.adobe.com/flex/spark"
 							splashScreenImage="views.AppSplashScreen" splashScreenScaleMode="none" splashScreenMinimumDisplayTime="500"
 							resize="applicationResizingHandler(event)"
-							creationComplete="creationComplete(event)" applicationComplete="applicationComplete()"
+							applicationComplete="applicationComplete()"
 							activate="activate()" deactivate="deactivate()"
 							locale="{resourceManager.getString('piwik', 'General_Locale')}"
 							direction="{languageDirection}"
@@ -70,32 +70,40 @@
 				
 				if(!showBackButton) systemManager.stage.removeEventListener(KeyboardEvent.KEY_DOWN, deviceKeyBackHandler);
 			}
-			protected function creationComplete(event:FlexEvent):void
+			protected function applicationComplete():void
 			{
-				trace('creation complete');
+				trace('application complete');
+				
+				// detect platform to show the back button
 				if(Capabilities.version.indexOf("AND")){
 					showBackButton = true;
 				}else{
 					showBackButton = false;
 				}
 				
+				// add eventListener to detect the hardware back button
 				if(!showBackButton) {
 					systemManager.stage.addEventListener(KeyboardEvent.KEY_DOWN, deviceKeyBackHandler);
 					trace('handle back button');
 				}
 				
+				// detect device type
 				isTablet = height > 960 || width > 960;
+				
+				// detect if it's a small screen
 				isSmallScreen = height < 500 || width < 500;
 				
 				//NativeApplication.nativeApplication.addEventListener(InvokeEvent.INVOKE, invoke);
 				
+				
+				// detect debugger mode
 				if(Capabilities.isDebugger) {
+					// set locale
 					//changeLocale("en_US");
+					
+					// show stats 
 					//addStats(this);
 				}
-			}
-			protected function applicationComplete():void{
-				trace('application complete');
 				
 				checkDataBase();
 			}
@@ -179,9 +187,10 @@
 				viewNavigator.defaultPushTransition = fade;
 				viewNavigator.defaultPopTransition = fade;
 				
-				/* vn.popAll();
-				vn.firstView = views.Home; */
+				// remove all views
+				viewNavigator.popAll();
 				
+				// show home view
 				viewNavigator.pushView(Home, listOfWebsites);
 			}
 			
@@ -197,6 +206,7 @@
 			}
 			protected function deviceKeyBackHandler(event:KeyboardEvent):void
 			{
+				// detect the hardware back button
 				if((event.keyCode == Keyboard.BACK) || (event.keyCode == 16777238)){
 					trace('device keyback prevent');
 					event.preventDefault();
