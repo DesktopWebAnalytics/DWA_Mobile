@@ -21,9 +21,13 @@
 			import spark.components.ViewNavigator;
 			
 			import views.reports.actions.Downloads;
+			import views.reports.actions.EntryPageTitles;
+			import views.reports.actions.EntryPageUrls;
+			import views.reports.actions.ExitPageTitles;
+			import views.reports.actions.ExitPageUrls;
 			import views.reports.actions.Outlinks;
 			import views.reports.actions.PageTitles;
-			import views.reports.actions.Pages;
+			import views.reports.actions.PageUrls;
 			import views.reports.goals.Goals;
 			import views.reports.live.Live;
 			import views.reports.referers.Campaigns;
@@ -31,9 +35,12 @@
 			import views.reports.referers.SearchEngines;
 			import views.reports.referers.Websites;
 			import views.reports.visitors.BrowserFamilies;
+			import views.reports.visitors.BrowserVersion;
 			import views.reports.visitors.Browsers;
 			import views.reports.visitors.Configurations;
 			import views.reports.visitors.Locations;
+			import views.reports.visitors.MobileVsDesktop;
+			import views.reports.visitors.OperatingSystemFamily;
 			import views.reports.visitors.OperatingSystems;
 			import views.reports.visitors.Plugins;
 			import views.reports.visitors.Providers;
@@ -169,9 +176,24 @@
 				<fx:label>{resourceManager.getString('piwik', 'UserSettings_Browsers')}</fx:label>
 			</fx:Object>
 			<fx:Object>
+				<fx:id>browserVersion</fx:id>
+				<fx:view>{BrowserVersion}</fx:view>
+				<fx:label>{resourceManager.getString('piwik', 'UserSettings_ColumnBrowserVersion')}</fx:label>
+			</fx:Object>
+			<fx:Object>
 				<fx:id>os</fx:id>
 				<fx:view>{OperatingSystems}</fx:view>
 				<fx:label>{resourceManager.getString('piwik', 'UserSettings_OperatingSystems')}</fx:label>
+			</fx:Object>
+			<fx:Object>
+				<fx:id>osFamily</fx:id>
+				<fx:view>{OperatingSystemFamily}</fx:view>
+				<fx:label>{resourceManager.getString('piwik', 'UserSettings_OperatingSystemFamily')}</fx:label>
+			</fx:Object>
+			<fx:Object>
+				<fx:id>mobileVsDesktop</fx:id>
+				<fx:view>{MobileVsDesktop}</fx:view>
+				<fx:label>{resourceManager.getString('piwik', 'UserSettings_MobileVsDesktop')}</fx:label>
 			</fx:Object>
 			<fx:Object>
 				<fx:id>resolutions</fx:id>
@@ -205,13 +227,33 @@
 			</fx:Object>
 			<fx:Object>
 				<fx:id>pageUrls</fx:id>
-				<fx:view>{Pages}</fx:view>
+				<fx:view>{PageUrls}</fx:view>
 				<fx:label>{resourceManager.getString('piwik', 'Actions_SubmenuPages')}</fx:label>
+			</fx:Object>
+			<fx:Object>
+				<fx:id>entryPageUrls</fx:id>
+				<fx:view>{EntryPageUrls}</fx:view>
+				<fx:label>{resourceManager.getString('piwik', 'Actions_SubmenuPagesEntry')}</fx:label>
+			</fx:Object>
+			<fx:Object>
+				<fx:id>exitPageUrls</fx:id>
+				<fx:view>{ExitPageUrls}</fx:view>
+				<fx:label>{resourceManager.getString('piwik', 'Actions_SubmenuPagesExit')}</fx:label>
 			</fx:Object>
 			<fx:Object>
 				<fx:id>pageTitles</fx:id>
 				<fx:view>{PageTitles}</fx:view>
 				<fx:label>{resourceManager.getString('piwik', 'Actions_SubmenuPageTitles')}</fx:label>
+			</fx:Object>
+			<fx:Object>
+				<fx:id>entryPageTitles</fx:id>
+				<fx:view>{EntryPageTitles}</fx:view>
+				<fx:label>{resourceManager.getString('piwik', 'Actions_EntryPageTitles')}</fx:label>
+			</fx:Object>
+			<fx:Object>
+				<fx:id>exitPageTitles</fx:id>
+				<fx:view>{ExitPageTitles}</fx:view>
+				<fx:label>{resourceManager.getString('piwik', 'Actions_ExitPageTitles')}</fx:label>
 			</fx:Object>
 			<fx:Object>
 				<fx:id>outlinks</fx:id>
