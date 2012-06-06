@@ -31,18 +31,23 @@
 			}
 			override public function set data(value:Object):void{
 				super.data = value;
-				if(data == null) return;
 				
-				loaderIcon = new LoadIcons();
-				loaderIcon.addEventListener(Event.COMPLETE, onCache);
-				loaderIcon.addEventListener(ErrorEvent.ERROR, errorCache);
-				loaderIcon.cache(path + data.logo);
-				
-				lab.text = data.label;
-				visits.text = data.nb_visits;
+				if(data == null) {
+					logo.source = null;
+					lab.text = "";
+					visits.text = "";
+				}else{
+					loaderIcon = new LoadIcons();
+					loaderIcon.addEventListener(Event.COMPLETE, onCache);
+					loaderIcon.addEventListener(ErrorEvent.ERROR, errorCache);
+					loaderIcon.cache(path + data.logo);
+					
+					lab.text = data.label;
+					visits.text = data.nb_visits;
+				}
 			}
 			private function onCache(event:Event):void{
-				logo.source = loaderIcon.path;
+				logo.source = event.currentTarget.path;
 				
 				clear();
 			}
@@ -58,7 +63,7 @@
 	</fx:Script>
 	
 	<s:BitmapImage id="logo" left="2" verticalCenter="0" smooth="true"/>
-	<s:Label id="lab" left="22" verticalCenter="0"/>
+	<s:Label id="lab" left="22" right="60" verticalCenter="0" maxDisplayedLines="1"/>
 	<s:Label id="visits" right="7" verticalCenter="0"/>
 	
 </s:ItemRenderer>
