@@ -21,6 +21,8 @@
 			import mx.events.ValidationResultEvent;
 			import mx.validators.Validator;
 			
+			import spark.skins.mobile.TextInputSkin;
+			
 			[Bindable]
 			private var siteSelected:Object;
 			
@@ -34,10 +36,16 @@
 			
 			protected function initializeV():void{
 				// hide back button
-				if(!FlexGlobals.topLevelApplication.showBackButton) backButton.includeInLayout = backButton.visible = false;
+				if(FlexGlobals.topLevelApplication.showBackButton == false) backButton.includeInLayout = backButton.visible = false;
+				
 			}
 			private function initView():void{
-				
+				if(FlexGlobals.topLevelApplication.isTablet == false){
+					// on phone remove StageText because of the scroll
+					urlSite.setStyle("skinClass", spark.skins.mobile.TextInputSkin);
+					user.setStyle("skinClass", spark.skins.mobile.TextInputSkin);
+					pass.setStyle("skinClass", spark.skins.mobile.TextInputSkin);
+				}
 			}
 			private function clearForm():void{
 				
