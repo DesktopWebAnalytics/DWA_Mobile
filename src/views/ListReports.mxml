@@ -52,12 +52,19 @@
 			
 			private var goals:Reports;
 			
+			private var version:Reports;
+			
 			private var created:Boolean = false;
 			
 			private function initView():void{
 				trace("Liste reports");
 				
 				if(!created){
+					version = new Reports();
+					version.addEventListener(Event.COMPLETE, resultVersion);
+					version.addEventListener(ErrorEvent.ERROR, errorVersion);
+					version.getPiwikVersion(FlexGlobals.topLevelApplication.selectedProfile);
+					
 					goals = new Reports();
 					goals.addEventListener(Event.COMPLETE, resultGoals);
 					goals.addEventListener(ErrorEvent.ERROR, errorGoals);
@@ -75,6 +82,35 @@
 						
 						(splitNavigator.getViewNavigatorAt(1) as ViewNavigator).pushView(Visits, reports.getItemAt(2).label);
 					}
+				}
+			}
+			private function clearVersion():void{
+				version.removeEventListener(Event.COMPLETE, resultVersion);
+				version.removeEventListener(ErrorEvent.ERROR, errorVersion);
+				version = null;
+			}
+			private function errorVersion(event:ErrorEvent):void{
+				trace("Error version");
+				
+				clearVersion();
+			}
+			private function resultVersion(event:Event):void{
+				var currentVersion:String = version.result.toString();
+				
+				trace("Piwik version: " + currentVersion);
+				
+				// test if version > 1.8 if not remove unsupported reports
+				if(currentVersion < "1.8"){
+					trace("Piwik < 1.8");
+					
+					// remove form the last report
+					
+					// remove exitPageTitles (23), entryPageTitles (22), mobileVsDesktop (11), osFamily (10), browserVersion (8)
+					reports.removeItemAt(23);
+					reports.removeItemAt(22);
+					reports.removeItemAt(11);
+					reports.removeItemAt(10);
+					reports.removeItemAt(8);
 				}
 			}
 			private function clearGoals():void{
