@@ -8,7 +8,7 @@
 -->
 <s:View xmlns:fx="http://ns.adobe.com/mxml/2009" 
 				 xmlns:s="library://ns.adobe.com/flex/spark"
-				 title="About" initialize="initializeV()" viewActivate="initView()" >
+				 title="{resourceManager.getString('piwik', 'General_Help')}" initialize="initializeV()" viewActivate="initView()" >
 	<fx:Script>
 		<![CDATA[
 			import flash.net.navigateToURL;
