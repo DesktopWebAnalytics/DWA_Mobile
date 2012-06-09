@@ -19,6 +19,9 @@
 			import mx.collections.XMLListCollection;
 			import mx.core.FlexGlobals;
 			
+			import spark.collections.Sort;
+			import spark.collections.SortField;
+			
 			private var profile:Profile;
 			
 			private var report:Reports;
@@ -54,6 +57,13 @@
 			}
 			private function compute():void{
 				trace("page urls");
+				var sortField:SortField = new SortField("exit_nb_visits", true, true);
+				var sort:Sort = new Sort();
+				sort.fields = [sortField];
+				
+				result.sort = sort;
+				result.refresh();
+				
 				currentState = "tab";
 				
 				list.dataProvider = result;
