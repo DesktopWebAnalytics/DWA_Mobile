@@ -126,7 +126,7 @@
 				var goalsXMLList:XMLListCollection = goals.resultCollectionRow;
 				clearGoals();
 				
-				// if there is any goal and them to the reports list
+				// if there is any goal add them to the reports list
 				if(goalsXMLList.length > 0){
 					// add goal header
 					reportsList.dataProvider.addItem({id: "header", view: "", label: resourceManager.getString('piwik', 'Goals_Goals')});
@@ -298,7 +298,7 @@
 			</fx:Object>
 			<fx:Object>
 				<fx:id>downloads</fx:id>
-				<fx:view>{Outlinks}</fx:view>
+				<fx:view>{Downloads}</fx:view>
 				<fx:label>{resourceManager.getString('piwik', 'Actions_SubmenuDownloads')}</fx:label>
 			</fx:Object>
 			<fx:Object>
