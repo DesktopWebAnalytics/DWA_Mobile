@@ -19,15 +19,18 @@
 			import mx.collections.ArrayList;
 			import mx.core.FlexGlobals;
 			
+			import spark.skins.mobile.TextInputSkin;
+			
 			private const MINPERIOD:int = 2;
 			private const MAXPERIOD:int = 30;
+			
+			private const PERIOD:Array = [2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30];
 			
 			protected function initializeV():void{
 				// hide back button
 				if(!FlexGlobals.topLevelApplication.showBackButton) backButton.includeInLayout = backButton.visible = false;
 			}
 			private function initView():void{
-				
 				selectWebsite.dataProvider = new ArrayList(data as Array);
 				limitPeriod.text = '(' + MINPERIOD + '-' + MAXPERIOD + ')';
 			}
@@ -45,7 +48,7 @@
 					day = false;
 				}
 				
-				var per:int = parseInt(period.text);
+				var per:int = spinnerList.selectedItem;
 				if(per < MINPERIOD) per = MINPERIOD;
 				else if(per > MAXPERIOD) per = MAXPERIOD;
 				
@@ -83,23 +86,6 @@
 				errorMessage.text = "";
 				currentState = "normal";
 				checkLoad.visible=false;
-			}
-			
-			private function incrementPeriod():void{
-				var val:int = parseInt(period.text)+1;
-				if(val > MAXPERIOD){
-					period.text = MAXPERIOD.toString();
-				}else{
-					period.text = val.toString();
-				}
-			}
-			private function decrementPeriod():void{
-				var val:int = parseInt(period.text)-1;
-				if(val < MINPERIOD){
-					period.text = MINPERIOD.toString();
-				}else{
-					period.text = val.toString();
-				}
 			}
 			
 			protected function view1_keyDownHandler(event:KeyboardEvent):void
@@ -182,9 +168,9 @@
 				<s:VGroup width="100%" verticalAlign="middle">
 					<s:Label width="100%" text="{resourceManager.getString('piwik', 'VisitorGenerator_DaysToCompute')}" />
 					<s:HGroup verticalAlign="middle">
-						<s:Button label="-" height="60" click="decrementPeriod()" />
-						<s:TextInput id="period" width="70" softKeyboardType="number" textAlign="center" height="60" text="10" restrict="0-9" maxChars="2" />
-						<s:Button label="+" height="60" click="incrementPeriod()" />
+						<s:SpinnerListContainer>
+							<s:SpinnerList id="spinnerList" width="60" height="100" textAlign="right" selectedItem="10" dataProvider="{new ArrayList(PERIOD)}" />
+						</s:SpinnerListContainer>
 						
 						<s:Label id="limitPeriod" paddingLeft="5" />
 					</s:HGroup>
