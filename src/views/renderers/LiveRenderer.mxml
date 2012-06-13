@@ -33,11 +33,26 @@
 				
 				logoUser.contentLoader = iconCache;
 				logoGoal.contentLoader = iconCache;
+				
+				visitor.text = "";
+				nbGoals.text = "";
+				referrer.text = "";
+				actions.text = "";
 			}
 			
 			override public function set data(value:Object):void{
 				super.data = value;
-				if(data == null) return;
+				if(data == null) {
+					logoCountry.source = null;
+					logoOS.source = null;
+					logoBrowser.source = null;
+					logoBrowser.source = null;
+					
+					logoUser.source = null;
+					logoGoal.source = null;
+						
+					return;
+				}
 				
 				var item:Object = data;
 				
