@@ -173,6 +173,7 @@
 				else {
 					trace ("Authentication error");
 					errorCheck.text = resourceManager.getString('piwik', 'Login_LoginPasswordNotCorrect');
+					endLoading();
 				}
 				//endLoading();
 			}
